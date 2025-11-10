@@ -1,0 +1,17 @@
+{
+  "name": "zenith-wellness-server",
+  "version": "1.0.0",
+  "description": "WebSocket server for Zenith Wellness application",
+  "main": "websocket-server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node websocket-server.js",
+    "dev": "node websocket-server.js"
+  },
+  "dependencies": {
+    "ws": "^8.14.2"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}

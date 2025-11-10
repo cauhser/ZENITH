@@ -1,0 +1,123 @@
+import React from 'react';
+import { EmotionData, GazePoint, ContentTrigger } from '../../types';
+
+// Define props for child components based on your types
+interface EmotionChartProps {
+  emotions: EmotionData[];
+  timeRange?: string;
+  height?: number;
+}
+
+interface GazeTrackingProps {
+  gazeData: GazePoint[];
+  showHeatmap?: boolean;
+}
+
+interface ContentAnalysisProps {
+  contentItems: ContentTrigger[];
+  maxItems?: number;
+}
+
+// Mock child components with proper typing
+const EmotionChart: React.FC<EmotionChartProps> = ({ emotions, timeRange = '24h', height = 300 }) => {
+  return (
+    <div className="emotion-chart" style={{ height }}>
+      <h3>Emotion Chart</h3>
+      <p>Showing {emotions.length} emotion data points</p>
+      <p>Time range: {timeRange}</p>
+      {/* Add your actual chart implementation here */}
+    </div>
+  );
+};
+
+const GazeTracking: React.FC<GazeTrackingProps> = ({ gazeData, showHeatmap = true }) => {
+  return (
+    <div className="gaze-tracking">
+      <h3>Gaze Tracking</h3>
+      <p>Tracking {gazeData.length} gaze points</p>
+      <p>Heatmap: {showHeatmap ? 'Enabled' : 'Disabled'}</p>
+      {/* Add your actual gaze tracking implementation here */}
+    </div>
+  );
+};
+
+const ContentAnalysis: React.FC<ContentAnalysisProps> = ({ contentItems, maxItems = 10 }) => {
+  return (
+    <div className="content-analysis">
+      <h3>Content Analysis</h3>
+      <p>Analyzed {contentItems.length} content items</p>
+      <p>Showing max: {maxItems} items</p>
+      {/* Add your actual content analysis implementation here */}
+    </div>
+  );
+};
+
+// Main Dashboard component
+const Dashboard: React.FC = () => {
+  // Sample data that matches your type definitions
+  const emotions: EmotionData[] = [
+    {
+      timestamp: Date.now(),
+      emotion: 'happy',
+      confidence: 0.85,
+      intensity: 0.8
+    },
+    {
+      timestamp: Date.now() - 1000,
+      emotion: 'neutral',
+      confidence: 0.72,
+      intensity: 0.5
+    }
+  ];
+
+  const gazeData: GazePoint[] = [
+    {
+      x: 100,
+      y: 200,
+      timestamp: Date.now(),
+      content: 'dashboard-component'
+    },
+    {
+      x: 150,
+      y: 250,
+      timestamp: Date.now() - 500,
+      content: 'navigation-menu'
+    }
+  ];
+
+  const contentItems: ContentTrigger[] = [
+    {
+      type: 'engagement',
+      timestamp: Date.now(),
+      data: { duration: 120000 }
+    },
+    {
+      type: 'distraction',
+      timestamp: Date.now() - 30000,
+      data: { source: 'external-notification' }
+    }
+  ];
+
+  return (
+    <div className="dashboard">
+      <h1>Wellness Dashboard</h1>
+      
+      <div className="dashboard-grid">
+        {/* These will now work with proper TypeScript typing */}
+        <div className="dashboard-item">
+          <EmotionChart emotions={emotions} timeRange="1h" height={250} />
+        </div>
+        
+        <div className="dashboard-item">
+          <GazeTracking gazeData={gazeData} showHeatmap={true} />
+        </div>
+        
+        <div className="dashboard-item">
+          <ContentAnalysis contentItems={contentItems} maxItems={5} />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Dashboard;

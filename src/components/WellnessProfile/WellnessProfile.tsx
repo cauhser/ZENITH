@@ -1,0 +1,180 @@
+import React from 'react';
+import { useStore } from '../../store';
+import { EmotionData } from '../../types';
+
+const WellnessProfile: React.FC = () => {
+  const { 
+    emotionalTrends, 
+    wellnessScore, 
+    screenTime, 
+    contentTriggers, 
+    breakReminders, 
+    currentEmotion 
+  } = useStore();
+
+  // Add proper typing for reduce function parameters
+  const emotionStats = emotionalTrends.reduce((acc: Record<string, number>, data: EmotionData) => {
+    acc[data.emotion] = (acc[data.emotion] || 0) + 1;
+    return acc;
+  }, {} as Record<string, number>);
+
+  // Add proper typing for Object.entries
+  const emotionData = Object.entries(emotionStats).map(([emotion, count]) => ({
+    emotion,
+    count: count as number,
+    percentage: (count as number / emotionalTrends.length) * 100
+  }));
+
+  // Calculate wellness insights
+  const positiveEmotions = emotionData.filter(item => 
+    ['happy', 'neutral', 'surprised'].includes(item.emotion)
+  ).reduce((sum, item) => sum + item.count, 0);
+
+  const negativeEmotions = emotionData.filter(item => 
+    ['sad', 'anxious', 'stressed', 'angry'].includes(item.emotion)
+  ).reduce((sum, item) => sum + item.count, 0);
+
+  const positiveRatio = emotionalTrends.length > 0 ? (positiveEmotions / emotionalTrends.length) * 100 : 0;
+
+  return (
+    <div className="wellness-profile">
+      <header className="page-header">
+        <h1>Wellness Profile</h1>
+        <p>Your personal wellness insights and patterns</p>
+      </header>
+
+      <div className="profile-stats">
+        <div className="stat-card">
+          <div className="stat-icon">🧠</div>
+          <div className="stat-content">
+            <h3>Wellness Score</h3>
+            <div className="stat-value">{wellnessScore}%</div>
+            <p className="stat-description">Overall wellbeing</p>
+          </div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-icon">⏱️</div>
+          <div className="stat-content">
+            <h3>Screen Time</h3>
+            <div className="stat-value">{screenTime}m</div>
+            <p className="stat-description">Today</p>
+          </div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-icon">⚠️</div>
+          <div className="stat-content">
+            <h3>Content Triggers</h3>
+            <div className="stat-value">{contentTriggers.length}</div>
+            <p className="stat-description">Identified</p>
+          </div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-icon">😊</div>
+          <div className="stat-content">
+            <h3>Current Emotion</h3>
+            <div className="stat-value">{currentEmotion}</div>
+            <p className="stat-description">Detected</p>
+          </div>
+        </div>
+      </div>
+
+      <div className="emotion-breakdown">
+        <h3>Emotion Distribution</h3>
+        <div className="emotion-list">
+          {emotionData.map((item) => (
+            <div key={item.emotion} className="emotion-item">
+              <span className="emotion-name">{item.emotion}</span>
+              <div className="emotion-bar">
+                <div 
+                  className="emotion-fill"
+                  style={{ width: `${item.percentage}%` }}
+                />
+              </div>
+              <span className="emotion-percentage">{item.percentage.toFixed(1)}%</span>
+              <span className="emotion-count">({item.count})</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="wellness-insights">
+        <h3>Wellness Insights</h3>
+        <div className="insights-grid">
+          <div className="insight-card">
+            <h4>Emotional Balance</h4>
+            <div className="insight-value">{positiveRatio.toFixed(1)}%</div>
+            <p>Positive to negative emotion ratio</p>
+            {positiveRatio > 60 && <span className="insight-tag positive">Excellent Balance</span>}
+            {positiveRatio > 40 && positiveRatio <= 60 && <span className="insight-tag neutral">Good Balance</span>}
+            {positiveRatio <= 40 && <span className="insight-tag warning">Needs Attention</span>}
+          </div>
+          
+          <div className="insight-card">
+            <h4>Break Frequency</h4>
+            <div className="insight-value">{breakReminders.length}</div>
+            <p>Total wellness breaks taken</p>
+            {breakReminders.length > 5 && <span className="insight-tag positive">Good Self-care</span>}
+            {breakReminders.length > 2 && breakReminders.length <= 5 && <span className="insight-tag neutral">Moderate</span>}
+            {breakReminders.length <= 2 && <span className="insight-tag warning">Take More Breaks</span>}
+          </div>
+          
+          <div className="insight-card">
+            <h4>Content Sensitivity</h4>
+            <div className="insight-value">{contentTriggers.length}</div>
+            <p>Triggering content encounters</p>
+            {contentTriggers.length === 0 && <span className="insight-tag positive">Low Sensitivity</span>}
+            {contentTriggers.length > 0 && contentTriggers.length <= 3 && <span className="insight-tag neutral">Moderate</span>}
+            {contentTriggers.length > 3 && <span className="insight-tag warning">High Sensitivity</span>}
+          </div>
+        </div>
+      </div>
+
+      <div className="recommendations">
+        <h3>Personalized Recommendations</h3>
+        <div className="recommendation-list">
+          {positiveRatio <= 40 && (
+            <div className="recommendation-item">
+              <div className="rec-icon">😊</div>
+              <div className="rec-content">
+                <h4>Boost Positive Emotions</h4>
+                <p>Try engaging with uplifting content and practice mindfulness to improve your emotional balance.</p>
+              </div>
+            </div>
+          )}
+          
+          {breakReminders.length <= 2 && (
+            <div className="recommendation-item">
+              <div className="rec-icon">⏰</div>
+              <div className="rec-content">
+                <h4>Take Regular Breaks</h4>
+                <p>Consider setting reminders to take short breaks every 45-60 minutes to maintain focus and reduce eye strain.</p>
+              </div>
+            </div>
+          )}
+          
+          {contentTriggers.length > 3 && (
+            <div className="recommendation-item">
+              <div className="rec-icon">🛡️</div>
+              <div className="rec-content">
+                <h4>Content Filtering</h4>
+                <p>Use content filters or curate your feeds to reduce exposure to triggering content.</p>
+              </div>
+            </div>
+          )}
+          
+          {emotionalTrends.length === 0 && (
+            <div className="recommendation-item">
+              <div className="rec-icon">📊</div>
+              <div className="rec-content">
+                <h4>Start Tracking</h4>
+                <p>Enable emotion detection to start gathering data about your emotional patterns and wellness trends.</p>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default WellnessProfile;

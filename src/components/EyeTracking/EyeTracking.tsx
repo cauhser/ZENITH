@@ -1,0 +1,80 @@
+import React from 'react';
+import { useStore } from '../../store';
+
+const EyeTracking: React.FC = () => {
+  // FIXED: Remove selector functions
+  const { gazeData, emotionalTrends } = useStore();
+
+  return (
+    <div className="eye-tracking">
+      <header className="page-header">
+        <h1>👁️ Eye Tracking</h1>
+        <p>Monitor gaze patterns and attention focus</p>
+      </header>
+
+      <div className="stats-overview">
+        <div className="stat-card">
+          <div className="stat-icon">👁️</div>
+          <div className="stat-content">
+            <h3>Gaze Points</h3>
+            <div className="stat-value">{gazeData.length}</div>
+            <p className="stat-description">Tracked</p>
+          </div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-icon">🎯</div>
+          <div className="stat-content">
+            <h3>Focus Duration</h3>
+            <div className="stat-value">{(gazeData.length * 0.5).toFixed(1)}s</div>
+            <p className="stat-description">Estimated</p>
+          </div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-icon">😊</div>
+          <div className="stat-content">
+            <h3>Emotion Data</h3>
+            <div className="stat-value">{emotionalTrends.length}</div>
+            <p className="stat-description">Points</p>
+          </div>
+        </div>
+      </div>
+
+      <div className="tracking-visualization">
+        <h3>Gaze Heatmap</h3>
+        <div className="heatmap-placeholder">
+          <p>👁️ Gaze visualization will appear here</p>
+          <small>This shows where you focus most on screen based on eye tracking data</small>
+        </div>
+      </div>
+
+      <div className="tracking-insights">
+        <h3>Attention Insights</h3>
+        <div className="insights-list">
+          <div className="insight-item">
+            <div className="insight-icon">🎯</div>
+            <div className="insight-content">
+              <h4>Focus Patterns</h4>
+              <p>Your gaze data shows typical reading patterns with regular saccades.</p>
+            </div>
+          </div>
+          <div className="insight-item">
+            <div className="insight-icon">⏱️</div>
+            <div className="insight-content">
+              <h4>Attention Span</h4>
+              <p>Average focus duration: 2.3 seconds per content area.</p>
+            </div>
+          </div>
+          <div className="insight-item">
+            <div className="insight-icon">🔄</div>
+            <div className="insight-content">
+              <h4>Scan Patterns</h4>
+              <p>You tend to scan from top-left to bottom-right consistently.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default EyeTracking;

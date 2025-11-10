@@ -1,0 +1,77 @@
+import React, { useState } from 'react';
+import './TriggerWordCloud.css';
+
+interface TriggerWord {
+  word: string;
+  count: number;
+  category: string;
+}
+
+const TriggerWordCloud: React.FC = () => {
+  // Mock data for trigger words
+  const [triggerWords] = useState<TriggerWord[]>([
+    { word: 'exam', count: 1247, category: 'academic' },
+    { word: 'FYP', count: 982, category: 'academic' },
+    { word: 'ghosted', count: 876, category: 'social' },
+    { word: 'stress', count: 754, category: 'emotional' },
+    { word: 'anxiety', count: 698, category: 'emotional' },
+    { word: 'deadline', count: 632, category: 'academic' },
+    { word: 'breakup', count: 543, category: 'social' },
+    { word: 'overwhelmed', count: 487, category: 'emotional' },
+    { word: 'presentation', count: 421, category: 'academic' },
+    { word: 'lonely', count: 398, category: 'social' }
+  ]);
+
+  // Get color based on category
+  const getWordColor = (category: string) => {
+    switch (category) {
+      case 'academic':
+        return '#3b82f6'; // blue
+      case 'social':
+        return '#10b981'; // green
+      case 'emotional':
+        return '#f59e0b'; // amber
+      default:
+        return '#6366f1'; // indigo
+    }
+  };
+
+  // Get size based on count
+  const getWordSize = (count: number, maxCount: number) => {
+    const minSize = 14;
+    const maxSize = 32;
+    return minSize + ((count / maxCount) * (maxSize - minSize));
+  };
+
+  const maxCount = Math.max(...triggerWords.map(word => word.count));
+
+  return (
+    <div className="trigger-word-cloud">
+      <div className="cloud-header">
+        <h3>Live Community Insights</h3>
+        <p className="cloud-subtitle">Top 10 trigger words this week in Hong Kong</p>
+      </div>
+      <div className="cloud-container">
+        {triggerWords.map((word, index) => (
+          <div
+            key={word.word}
+            className="word-item"
+            style={{
+              fontSize: `${getWordSize(word.count, maxCount)}px`,
+              color: getWordColor(word.category),
+              animationDelay: `${index * 0.1}s`
+            }}
+            title={`${word.word}: ${word.count} mentions (${word.category})`}
+          >
+            {word.word}
+          </div>
+        ))}
+      </div>
+      <div className="cloud-footer">
+        <p>Updated daily • Interactive hover for wellness tips</p>
+      </div>
+    </div>
+  );
+};
+
+export default TriggerWordCloud;

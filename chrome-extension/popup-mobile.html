@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link rel="stylesheet" href="popup-mobile.css">
+</head>
+<body>
+  <div class="popup-container">
+    <div class="header">
+      <div class="logo-container">
+        <img src="icons/Zenith_Logo_V01_32_32px.png" alt="ZENITH Logo" class="logo">
+      </div>
+      <h3>🧠 ZENITH</h3>
+      <p>Wellness Tracker</p>
+      <div id="statusIndicator" class="status-indicator status-connected">
+        <span class="loading"></span>
+        Connecting...
+      </div>
+    </div>
+    
+    <div class="content">
+      <div id="permissionWarning" class="permission-warning" style="display: none;">
+        <p>🔒 Enable tracking to start</p>
+        <button id="enableTracking" class="btn btn-success btn-full">
+          🚀 Enable Tracking
+        </button>
+      </div>
+      
+      <div class="stats-grid">
+        <div class="stat-card" id="triggersCard">
+          <div class="stat-value" id="triggersCount">0</div>
+          <div class="stat-label">Triggers</div>
+        </div>
+        <div class="stat-card" id="pagesCard">
+          <div class="stat-value" id="pagesCount">0</div>
+          <div class="stat-label">Pages</div>
+        </div>
+        <div class="stat-card" id="sentimentCard">
+          <div class="stat-value" id="sentimentScore">0%</div>
+          <div class="stat-label">Positive</div>
+        </div>
+      </div>
+      
+      <div class="collection-method-selector">
+        <label>Data Collection:</label>
+        <select id="collectionMethod" class="method-select">
+          <option value="content">Content Only</option>
+          <option value="both">Content + Webcam</option>
+        </select>
+      </div>
+      
+      <div class="recent-activity">
+        <h4>📈 Recent Activity</h4>
+        <div id="recentActivity" class="activity-list">
+          <div class="empty-state">No data collected yet</div>
+        </div>
+      </div>
+      
+      <div class="buttons-grid">
+        <button id="togglePause" class="btn btn-primary">
+          ⏸️ Pause Collection
+        </button>
+        <button id="viewDashboard" class="btn btn-primary btn-full">
+          📊 Open Dashboard
+        </button>
+      </div>
+      
+      <!-- New Mobile Features -->
+      <div class="mobile-features">
+        <div class="feature-section">
+          <h4>📱 Quick Actions</h4>
+          <div class="quick-actions-grid">
+            <button id="takeBreak" class="btn btn-secondary quick-action">
+              ☕ Take Break
+            </button>
+            <button id="logMood" class="btn btn-secondary quick-action">
+              😊 Log Mood
+            </button>
+            <button id="dailyTip" class="btn btn-secondary quick-action">
+              💡 Daily Tip
+            </button>
+            <button id="emergencyHelp" class="btn btn-danger quick-action">
+              🆘 Emergency
+            </button>
+          </div>
+        </div>
+        
+        <div class="feature-section">
+          <h4>📊 Mood Overview</h4>
+          <div class="mood-overview">
+            <div class="mood-chart-container">
+              <canvas id="moodChart" width="200" height="100"></canvas>
+            </div>
+            <div class="mood-stats">
+              <div class="mood-stat">
+                <span class="stat-label">Today</span>
+                <span class="stat-value" id="todayMood">😊</span>
+              </div>
+              <div class="mood-stat">
+                <span class="stat-label">This Week</span>
+                <span class="stat-value" id="weekMood">😊</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="popup-mobile.js"></script>
+</body>
+</html>

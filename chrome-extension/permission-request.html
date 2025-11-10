@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>ZENITH Wellness - Permission Request</title>
+  <link rel="stylesheet" href="permission-request.css">
+</head>
+<body>
+  <div class="permission-container">
+    <div class="header">
+      <h1>🧠 ZENITH Wellness</h1>
+      <p>Choose your data collection method and grant permissions</p>
+    </div>
+    
+    <div class="permission-features">
+      <div class="feature">
+        <div class="feature-icon">🔍</div>
+        <div class="feature-content">
+          <h3>Content Analysis</h3>
+          <p>Analyze web content for wellbeing-related triggers and provide insights about your browsing habits.</p>
+        </div>
+      </div>
+      
+      <div class="feature">
+        <div class="feature-icon">👁️</div>
+        <div class="feature-content">
+          <h3>Eye Tracking</h3>
+          <p>Monitor attention patterns to understand your focus and provide break reminders.</p>
+        </div>
+      </div>
+      
+      <div class="feature">
+        <div class="feature-icon">😊</div>
+        <div class="feature-content">
+          <h3>Emotion Detection</h3>
+          <p>Use camera-based emotion analysis to track your emotional responses during browsing.</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="collection-method">
+      <h3>🎯 Choose Data Collection Method</h3>
+      
+      <div class="method-options">
+        <div class="method-option">
+          <input type="radio" id="contentOnly" name="collectionMethod" value="content" checked>
+          <label for="contentOnly">
+            <strong>Web Content Only</strong>
+            <span>Analyze only webpage content for mood triggers</span>
+          </label>
+        </div>
+        
+        <div class="method-option">
+          <input type="radio" id="bothMethods" name="collectionMethod" value="both">
+          <label for="bothMethods">
+            <strong>Content + Webcam Analysis</strong>
+            <span>Combine webpage content with webcam emotion tracking</span>
+          </label>
+        </div>
+      </div>
+    </div>
+    
+    <div class="permission-options">
+      <h3>Enable Features:</h3>
+      
+      <div class="option-group">
+        <label class="option-label">
+          <input type="checkbox" class="option-checkbox" id="contentAnalysis" checked>
+          Enable Content Analysis
+        </label>
+        <div class="option-description">
+          Analyzes web pages for stress, anxiety, and other wellbeing-related content. Works across all websites you visit.
+        </div>
+      </div>
+      
+      <div class="option-group">
+        <label class="option-label">
+          <input type="checkbox" class="option-checkbox" id="eyeTracking">
+          Enable Eye Tracking
+        </label>
+        <div class="option-description">
+          Uses your camera to track attention patterns and provide insights about your focus and concentration.
+        </div>
+      </div>
+      
+      <div class="option-group">
+        <label class="option-label">
+          <input type="checkbox" class="option-checkbox" id="emotionDetection">
+          Enable Emotion Detection
+        </label>
+        <div class="option-description">
+          Analyzes facial expressions to detect emotional states and provide wellbeing insights.
+        </div>
+      </div>
+      
+      <div class="option-group">
+        <label class="option-label">
+          <input type="checkbox" class="option-checkbox" id="dataCollection" checked required>
+          Allow Data Collection
+        </label>
+        <div class="option-description">
+          Store analysis results locally to provide personalized insights and trends. Your data never leaves your device.
+        </div>
+      </div>
+    </div>
+    
+    <div class="browser-permissions">
+      <h3>🌐 Browser Permissions Required</h3>
+      <p>ZENITH Wellness needs these Chrome permissions:</p>
+      <ul>
+        <li><strong>Read web page content</strong> - Analyze mood-related content on ALL websites</li>
+        <li><strong>Access browser tabs</strong> - Track your browsing across different sites</li>
+        <li><strong>Webcam access</strong> - For emotion detection and eye tracking (if enabled)</li>
+        <li><strong>Store data locally</strong> - Keep your data private on your device</li>
+      </ul>
+      <p class="note">🔒 Your data never leaves your browser. All analysis happens locally.</p>
+    </div>
+    
+    <div class="privacy-notice">
+      <h3>🔒 Your Privacy & Data Security</h3>
+      <ul>
+        <li>All data is stored locally on your device</li>
+        <li>No personal information is sent to external servers</li>
+        <li>You can revoke permissions at any time</li>
+        <li>All analysis happens in real-time on your device</li>
+        <li>Webcam data is processed locally and immediately discarded</li>
+      </ul>
+    </div>
+    
+    <div class="action-buttons">
+      <button class="btn btn-secondary" id="denyBtn">
+        Maybe Later
+      </button>
+      <button class="btn btn-primary" id="grantBtn">
+        Enable Selected Features
+      </button>
+    </div>
+    
+    <div id="statusMessage" class="status-message" style="display: none;"></div>
+  </div>
+
+  <script src="permission-request.js"></script>
+</body>
+</html>

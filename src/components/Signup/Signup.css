@@ -1,0 +1,238 @@
+.signup-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  padding: 20px;
+  animation: gradientShift 8s ease-in-out infinite;
+}
+
+@keyframes gradientShift {
+  0%, 100% {
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  }
+  50% {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  }
+}
+
+.signup-container {
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(22, 103, 201, 0.1);
+  width: 100%;
+  max-width: 450px;
+  padding: 50px 40px;
+  border: 1px solid #e2e8f0;
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeInUp 0.8s ease-out 0.3s forwards;
+}
+
+.signup-header {
+  text-align: center;
+  margin-bottom: 40px;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 0.6s ease-out 0.5s forwards;
+}
+
+.signup-header h1 {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #1e293b;
+  margin-bottom: 12px;
+}
+
+.signup-header p {
+  color: #64748b;
+  font-size: 1.1rem;
+}
+
+.signup-form {
+  margin-bottom: 30px;
+}
+
+.form-group {
+  margin-bottom: 24px;
+  opacity: 0;
+  transform: translateX(-20px);
+  animation: slideInRight 0.6s ease-out forwards;
+}
+
+.form-group:nth-child(1) { animation-delay: 0.6s; }
+.form-group:nth-child(2) { animation-delay: 0.7s; }
+.form-group:nth-child(3) { animation-delay: 0.8s; }
+.form-group:nth-child(4) { animation-delay: 0.9s; }
+.form-group:nth-child(5) { animation-delay: 1.0s; }
+.form-group:nth-child(6) { animation-delay: 1.1s; }
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #334155;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 16px;
+  border: 1px solid #cbd5e1;
+  border-radius: 12px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+  background: white;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #1667c9;
+  box-shadow: 0 0 0 3px rgba(22, 103, 201, 0.2);
+  transform: translateY(-2px);
+}
+
+.checkbox-group label {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  cursor: pointer;
+  color: #64748b;
+  transition: color 0.3s ease;
+}
+
+.checkbox-group label:hover {
+  color: #334155;
+}
+
+.checkbox-group input {
+  width: auto;
+  margin: 4px 0 0;
+}
+
+.checkbox-group a {
+  color: #1667c9;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.checkbox-group a:hover {
+  text-decoration: underline;
+  color: #1e40af;
+}
+
+.btn {
+  padding: 16px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: none;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  position: relative;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 0.6s ease-out 1.2s forwards;
+}
+
+.btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  transition: left 0.5s;
+}
+
+.btn:hover::before {
+  left: 100%;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #1667c9, #1e40af);
+  color: white;
+  box-shadow: 0 4px 14px rgba(22, 103, 201, 0.3);
+}
+
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(22, 103, 201, 0.4);
+}
+
+.btn-primary:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+.btn-block {
+  width: 100%;
+}
+
+.loading-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInRight {
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.signup-footer {
+  text-align: center;
+  color: #64748b;
+  opacity: 0;
+  animation: fadeIn 0.6s ease-out 1.4s forwards;
+}
+
+.signup-footer a {
+  color: #1667c9;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.signup-footer a:hover {
+  text-decoration: underline;
+  color: #1e40af;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .signup-container {
+    padding: 40px 20px;
+  }
+  
+  .signup-header h1 {
+    font-size: 1.75rem;
+  }
+}
