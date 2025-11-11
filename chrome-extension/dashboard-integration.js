@@ -1,4 +1,3 @@
-// dashboard-integration.js - Enhanced for real data streaming
 console.log('ZENITH Wellness Dashboard Integration loaded - REAL DATA MODE');
 
 class DashboardIntegration {
@@ -14,11 +13,9 @@ class DashboardIntegration {
         this.init();
     }
 
-    // Initialize the dashboard integration
     init() {
         console.log('🔄 Initializing dashboard integration with real data...');
-        
-        // Check if we're in a browser environment with chrome API
+    
         if (typeof chrome === 'undefined' || !chrome.runtime) {
             console.warn('Chrome extension API not available - running in standalone mode');
             this.setupStandaloneMode();
@@ -27,25 +24,14 @@ class DashboardIntegration {
 
         this.extensionId = chrome.runtime.id;
         console.log('🔗 Extension ID:', this.extensionId);
-
-        // Set up message listeners
         this.setupMessageListeners();
-        
-        // Initialize connection to extension
         this.connectToExtension();
-        
-        // Set up periodic health checks
         this.setupHealthChecks();
-        
-        // Set up storage sync
         this.setupStorageSync();
-        
-        // Set up debug mode
         this.setupDebugMode();
     }
 
     setupDebugMode() {
-        // Enable detailed logging
         window.zenithDebug = {
             log: (message, data) => {
                 console.log('🐛 DASHBOARD DEBUG:', message, data);
@@ -57,12 +43,9 @@ class DashboardIntegration {
         console.log('🔧 Debug mode enabled - use window.zenithDebug to inspect');
     }
 
-    // Connect to the Chrome extension
     async connectToExtension() {
         try {
             console.log('🔌 Connecting to extension for real data...');
-            
-            // Test connection with ping
             const pingResponse = await this.sendMessageToExtension({ type: 'PING' });
             
             if (pingResponse && pingResponse.status === 'pong') {
@@ -74,13 +57,8 @@ class DashboardIntegration {
                     dataStats: pingResponse.dataStats
                 });
 
-                // Load permissions
                 await this.loadPermissions();
-                
-                // Load initial real data
                 await this.loadInitialData();
-                
-                // Notify dashboard about connection
                 this.notifyDashboard('EXTENSION_CONNECTED', {
                     extensionId: this.extensionId,
                     version: pingResponse.version,
@@ -98,7 +76,6 @@ class DashboardIntegration {
         }
     }
 
-    // Handle connection errors with retry logic
     handleConnectionError() {
         this.isConnected = false;
         
@@ -119,9 +96,7 @@ class DashboardIntegration {
         }
     }
 
-    // Set up message listeners for extension communication
     setupMessageListeners() {
-        // Listen for messages from extension
         chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             console.log('📨 Real data received from extension:', request.type);
             
@@ -159,7 +134,7 @@ class DashboardIntegration {
             return true;
         });
 
-        // Listen for storage changes
+       
         chrome.storage.onChanged.addListener((changes, namespace) => {
             if (namespace === 'local') {
                 this.handleStorageChanges(changes);
@@ -167,13 +142,10 @@ class DashboardIntegration {
         });
     }
 
-    // Handle real-time extension data
     handleExtensionData(request) {
         const { event, data, timestamp } = request;
         
         console.log('📊 Real-time data event:', event, data);
-        
-        // Add to data buffer
         this.dataBuffer.push({
             event,
             data,
@@ -181,7 +153,7 @@ class DashboardIntegration {
             receivedAt: Date.now()
         });
         
-        // Keep buffer manageable
+
         if (this.dataBuffer.length > 1000) {
             this.dataBuffer = this.dataBuffer.slice(-500);
         }
@@ -207,16 +179,12 @@ class DashboardIntegration {
         }
     }
 
-    // Set up periodic health checks
     setupHealthChecks() {
-        // Check connection every 30 seconds
         setInterval(() => {
             if (this.isConnected) {
                 this.checkConnectionHealth();
             }
         }, 30000);
-
-        // Sync data every 10 seconds for real-time updates
         setInterval(() => {
             if (this.isConnected && this.permissions?.dataCollection) {
                 this.syncRealTimeData();
@@ -224,9 +192,7 @@ class DashboardIntegration {
         }, 10000);
     }
 
-    // Set up storage synchronization
     setupStorageSync() {
-        // Listen for dashboard storage events and sync with extension
         window.addEventListener('storage', (event) => {
             if (event.key && event.key.startsWith('zenith-')) {
                 this.syncLocalStorageToExtension();
@@ -234,12 +200,10 @@ class DashboardIntegration {
         });
     }
 
-    // Check connection health
     async checkConnectionHealth() {
         try {
             const response = await this.sendMessageToExtension({ type: 'PING' });
             if (response && response.status === 'pong') {
-                // Connection is healthy
                 this.notifyDashboard('CONNECTION_HEALTHY', {
                     timestamp: Date.now(),
                     extensionVersion: response.version,
@@ -251,11 +215,10 @@ class DashboardIntegration {
         } catch (error) {
             console.warn('⚠️ Connection health check failed:', error);
             this.isConnected = false;
-            this.connectToExtension(); // Attempt reconnect
+            this.connectToExtension(); 
         }
     }
 
-    // Sync real-time data
     async syncRealTimeData() {
         try {
             const [analyticsResponse, webcamResponse] = await Promise.all([
@@ -284,7 +247,6 @@ class DashboardIntegration {
         }
     }
 
-    // Send message to extension with error handling
     async sendMessageToExtension(message) {
         return new Promise((resolve, reject) => {
             if (!chrome.runtime?.sendMessage) {
@@ -302,7 +264,6 @@ class DashboardIntegration {
         });
     }
 
-    // Load permissions from extension
     async loadPermissions() {
         try {
             const response = await this.sendMessageToExtension({ type: 'GET_PERMISSIONS' });
@@ -319,7 +280,6 @@ class DashboardIntegration {
         }
     }
 
-    // Load initial real data from extension
     async loadInitialData() {
         if (!this.permissions?.dataCollection) {
             console.log('📊 Data collection not permitted - skipping initial data load');
@@ -327,7 +287,6 @@ class DashboardIntegration {
         }
 
         try {
-            // Load analytics data
             const analyticsResponse = await this.sendMessageToExtension({ type: 'GET_ANALYTICS_DATA' });
             if (analyticsResponse && analyticsResponse.analytics) {
                 this.notifyDashboard('REAL_ANALYTICS_LOADED', {
@@ -337,7 +296,6 @@ class DashboardIntegration {
                 });
             }
 
-            // Load webcam data
             const webcamResponse = await this.sendMessageToExtension({ type: 'GET_WEBCAM_DATA' });
             if (webcamResponse && webcamResponse.webcamData) {
                 this.notifyDashboard('REAL_WEBCAM_LOADED', {
@@ -347,7 +305,6 @@ class DashboardIntegration {
                 });
             }
 
-            // Load settings
             const settingsResponse = await this.sendMessageToExtension({ type: 'GET_SETTINGS' });
             if (settingsResponse && settingsResponse.settings) {
                 this.notifyDashboard('SETTINGS_LOADED', {
@@ -360,7 +317,6 @@ class DashboardIntegration {
         }
     }
 
-    // Handle new analysis data from extension
     handleNewAnalysis(analysisData) {
         console.log('📊 New real analysis received:', {
             domain: analysisData.domain,
@@ -374,11 +330,10 @@ class DashboardIntegration {
             realData: true
         });
 
-        // Update local storage for offline access
         this.updateLocalStorage('analytics', analysisData);
     }
 
-    // Handle permissions updates
+
     handlePermissionsUpdate(newPermissions) {
         console.log('🔄 Real permissions updated:', newPermissions);
         this.permissions = newPermissions;
@@ -387,13 +342,12 @@ class DashboardIntegration {
             permissions: newPermissions
         });
 
-        // If data collection was just enabled, load data
+
         if (newPermissions.dataCollection) {
             this.loadInitialData();
         }
     }
 
-    // Handle extension status updates
     handleExtensionStatus(status) {
         console.log('📡 Extension status:', status);
         this.notifyDashboard('EXTENSION_STATUS_UPDATE', {
@@ -402,13 +356,12 @@ class DashboardIntegration {
         });
     }
 
-    // Handle data updates from extension
     handleDataUpdated(updatedData) {
         console.log('🔄 Real data updated from extension:', updatedData.type);
         this.notifyDashboard('EXTENSION_DATA_UPDATED', updatedData);
     }
 
-    // Handle storage changes from extension
+
     handleStorageChanges(changes) {
         Object.entries(changes).forEach(([key, change]) => {
             console.log('💾 Real storage changed:', key, change);
@@ -443,10 +396,8 @@ class DashboardIntegration {
         });
     }
 
-    // Sync local storage to extension
     async syncLocalStorageToExtension() {
         try {
-            // Get local storage data that needs to be synced
             const localData = this.getLocalStorageData();
             
             if (Object.keys(localData).length > 0) {
@@ -461,7 +412,7 @@ class DashboardIntegration {
         }
     }
 
-    // Get local storage data for syncing
+
     getLocalStorageData() {
         const data = {};
         const prefix = 'zenith-';
@@ -480,7 +431,6 @@ class DashboardIntegration {
         return data;
     }
 
-    // Update local storage
     updateLocalStorage(key, value) {
         const storageKey = `zenith-${key}`;
         try {
@@ -492,7 +442,7 @@ class DashboardIntegration {
         }
     }
 
-    // Notify dashboard about events
+   
     notifyDashboard(eventType, data) {
         const event = new CustomEvent('zenith-extension-event', {
             detail: {
@@ -508,14 +458,12 @@ class DashboardIntegration {
             }
         });
         
-        // Dispatch to window for React components to listen
+    
         window.dispatchEvent(event);
-        
-        // Also log for debugging
         console.log(`📢 Dashboard notified: ${eventType}`, data);
     }
 
-    // Public method to trigger content analysis
+    
     async triggerContentAnalysis() {
         if (!this.isConnected || !this.permissions?.contentAnalysis) {
             throw new Error('Content analysis not permitted or extension not connected');
@@ -530,7 +478,6 @@ class DashboardIntegration {
         }
     }
 
-    // Public method to start webcam collection
     async startWebcamCollection() {
         if (!this.isConnected || !this.permissions?.emotionDetection) {
             throw new Error('Webcam collection not permitted or extension not connected');
@@ -545,7 +492,6 @@ class DashboardIntegration {
         }
     }
 
-    // Public method to update settings
     async updateExtensionSettings(newSettings) {
         if (!this.isConnected) {
             throw new Error('Extension not connected');
@@ -563,7 +509,6 @@ class DashboardIntegration {
         }
     }
 
-    // Public method to clear data
     async clearExtensionData() {
         if (!this.isConnected) {
             throw new Error('Extension not connected');
@@ -578,7 +523,7 @@ class DashboardIntegration {
         }
     }
 
-    // Public method to get connection status
+
     getConnectionStatus() {
         return {
             isConnected: this.isConnected,
@@ -590,7 +535,7 @@ class DashboardIntegration {
         };
     }
 
-    // Public method to get real data stats
+
     getDataStats() {
         const contentData = this.dataBuffer.filter(item => 
             item.event === 'CONTENT_ANALYSIS' || item.event === 'NEW_ANALYSIS'
@@ -610,7 +555,7 @@ class DashboardIntegration {
         };
     }
 
-    // Setup standalone mode (when extension is not available)
+
     setupStandaloneMode() {
         console.log('🏠 Running in standalone mode with simulated data disabled');
         this.isConnected = false;

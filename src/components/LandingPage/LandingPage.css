@@ -4,19 +4,40 @@
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Inter', sans-serif;
   line-height: 1.6;
   overflow-x: hidden;
+  max-width: 100vw;
+  width: 100vw;
+  margin: 0 auto;
+  box-sizing: border-box;
+  padding: 0;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-/* Hero Section */
 .hero {
   display: flex;
   align-items: center;
-  padding: 80px 40px;
-  max-width: 1400px;
+  padding: 80px 10px;
+  max-width: 100vw;
+  width: 100%;
   margin: 0 auto;
   gap: 60px;
   opacity: 0;
   animation: fadeInUp 0.8s ease-out 0.2s forwards;
-  overflow: visible; /* Ensure no clipping */
+  overflow: hidden; 
+  box-sizing: border-box;
+  justify-content: center;
+}
+
+.hero-content {
+  flex: 1;
+  max-width: 600px;
+  overflow: visible; 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
 }
 
 .hero-title {
@@ -24,20 +45,15 @@
   font-weight: 800;
   line-height: 1.2;
   margin-bottom: 24px;
-  color: #1667c9; /* Solid color instead of gradient for better visibility */
+  color: #1667c9; 
   opacity: 0;
   transform: translateY(30px);
   animation: fadeInUp 0.8s ease-out 0.4s forwards;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add subtle shadow for better readability */
-  overflow: visible; /* Ensure no clipping */
-  white-space: normal; /* Ensure text wraps properly */
-  word-wrap: break-word; /* Break long words if needed */
-}
-
-.hero-content {
-  flex: 1;
-  max-width: 600px;
-  overflow: visible; /* Ensure content is not clipped */
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+  overflow: visible; 
+  white-space: normal; 
+  word-wrap: break-word; 
+  text-align: center;
 }
 
 .hero-subtitle {
@@ -48,6 +64,7 @@
   opacity: 0;
   transform: translateY(30px);
   animation: fadeInUp 0.8s ease-out 0.6s forwards;
+  text-align: center;
 }
 
 .hero-buttons {
@@ -57,7 +74,8 @@
   opacity: 0;
   transform: translateY(30px);
   animation: fadeInUp 0.8s ease-out 0.8s forwards;
-  justify-content: flex-start;
+  justify-content: center;
+  width: 100%;
 }
 
 .btn {
@@ -169,10 +187,12 @@
   background: #ef4444;
   animation-delay: 0s;
 }
+
 .dot.yellow { 
   background: #f59e0b;
   animation-delay: 0.2s;
 }
+
 .dot.green { 
   background: #10b981;
   animation-delay: 0.4s;
@@ -264,15 +284,19 @@
   line-height: 1.3;
 }
 
-/* Sections */
 .section-header {
   text-align: center;
-  max-width: 700px;
+  max-width: 100vw;
+  width: 100%;
   margin: 0 auto 60px;
-  padding: 0 20px;
+  padding: 0 10px;
   opacity: 0;
   transform: translateY(30px);
   animation: fadeInUp 0.8s ease-out forwards;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .features .section-header {
@@ -292,19 +316,27 @@
   font-weight: 800;
   margin-bottom: 20px;
   color: #1e293b;
+  text-align: center;
 }
 
 .section-subtitle {
   font-size: 1.1rem;
   color: #64748b;
   margin-bottom: 0;
+  text-align: center;
+  max-width: 600px;
 }
 
-/* Features Section */
 .features {
-  padding: 80px 20px;
+  padding: 80px 10px;
   background: white;
   text-align: center;
+  max-width: 100vw;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .features .section-header {
@@ -315,8 +347,12 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 30px;
-  max-width: 1200px;
+  max-width: 100vw;
+  width: 100%;
   margin: 0 auto;
+  padding: 0 10px;
+  box-sizing: border-box;
+  justify-content: center;
 }
 
 .feature-card {
@@ -326,6 +362,8 @@
   text-align: center;
   border: 1px solid #e2e8f0;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  max-width: 300px;
+  margin: 0 auto;
 }
 
 .feature-card:hover {
@@ -352,11 +390,16 @@
   margin: 0;
 }
 
-/* How It Works */
 .how-it-works {
-  padding: 80px 20px;
+  padding: 80px 10px;
   background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
   text-align: center;
+  max-width: 100vw;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .how-it-works .section-header {
@@ -367,8 +410,12 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 30px;
-  max-width: 1200px;
+  max-width: 100vw;
+  width: 100%;
   margin: 0 auto;
+  padding: 0 10px;
+  box-sizing: border-box;
+  justify-content: center;
 }
 
 .step {
@@ -378,6 +425,8 @@
   text-align: center;
   border: 1px solid #e2e8f0;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  max-width: 300px;
+  margin: 0 auto;
 }
 
 .step-number {
@@ -408,18 +457,27 @@
   margin: 0;
 }
 
-/* Testimonials */
 .testimonials {
-  padding: 100px 40px;
+  padding: 100px 10px;
   background: white;
+  max-width: 100vw;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .testimonial-cards {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
   gap: 40px;
-  max-width: 1200px;
+  max-width: 100vw;
+  width: 100%;
   margin: 0 auto;
+  padding: 0 10px;
+  box-sizing: border-box;
+  justify-content: center;
 }
 
 .testimonial-card {
@@ -431,6 +489,8 @@
   transform: translateY(30px);
   animation: fadeInUp 0.6s ease-out forwards;
   transition: all 0.3s ease;
+  max-width: 500px;
+  margin: 0 auto;
 }
 
 .testimonial-card:nth-child(1) { animation-delay: 0.3s; }
@@ -501,7 +561,6 @@
   font-size: 0.9rem;
 }
 
-/* CTA Section */
 .cta-section {
   padding: 100px 40px;
   background: linear-gradient(135deg, #1667c9, #1e40af);
@@ -509,11 +568,18 @@
   text-align: center;
   opacity: 0;
   animation: fadeIn 1s ease-out 0.3s forwards;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .cta-content {
   max-width: 700px;
   margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .cta-title {
@@ -523,6 +589,7 @@
   opacity: 0;
   transform: translateY(30px);
   animation: fadeInUp 0.8s ease-out 0.5s forwards;
+  text-align: center;
 }
 
 .cta-subtitle {
@@ -532,6 +599,7 @@
   opacity: 0;
   transform: translateY(30px);
   animation: fadeInUp 0.8s ease-out 0.7s forwards;
+  text-align: center;
 }
 
 .cta-section .btn {
@@ -540,11 +608,16 @@
   animation: fadeInUp 0.8s ease-out 0.9s forwards;
 }
 
-/* Wellness Calculator Section */
 .wellness-calculator {
-  padding: 80px 20px;
+  padding: 80px 10px;
   background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
   text-align: center;
+  max-width: 100vw;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .wellness-calculator .section-header {
@@ -554,6 +627,9 @@
 .calculator-cta {
   max-width: 600px;
   margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .quiz-container {
@@ -564,6 +640,8 @@
   padding: 30px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
   border: 1px solid #e2e8f0;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .quiz-progress {
@@ -596,6 +674,7 @@
   font-weight: 700;
   color: #1e293b;
   margin-bottom: 30px;
+  text-align: center;
 }
 
 .quiz-options {
@@ -631,10 +710,15 @@
   padding: 40px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
   border: 1px solid #e2e8f0;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .score-display {
   margin-bottom: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .score-value {
@@ -654,6 +738,7 @@
   white-space: normal;
   word-wrap: break-word;
   line-height: 1.3;
+  text-align: center;
 }
 
 .score-tip {
@@ -662,6 +747,7 @@
   padding: 20px;
   margin-bottom: 30px;
   border-left: 4px solid #6366f1;
+  text-align: left;
 }
 
 .score-tip p {
@@ -678,11 +764,16 @@
   flex-wrap: wrap;
 }
 
-/* Problem Statement Section */
 .problem-statement {
-  padding: 80px 20px;
+  padding: 80px 10px;
   background: white;
   text-align: center;
+  max-width: 100vw;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .problem-statement .section-header {
@@ -693,15 +784,24 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 30px;
-  max-width: 1000px;
+  max-width: 100vw;
+  width: 100%;
   margin: 0 auto;
+  padding: 0 10px;
+  box-sizing: border-box;
+  justify-content: center;
 }
 
-/* Science Behind Zenith */
 .science-section {
-  padding: 80px 20px;
+  padding: 80px 10px;
   background: white;
   text-align: center;
+  max-width: 100vw;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .science-section .section-header {
@@ -712,8 +812,12 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 30px;
-  max-width: 1200px;
+  max-width: 100vw;
+  width: 100%;
   margin: 0 auto;
+  padding: 0 10px;
+  box-sizing: border-box;
+  justify-content: center;
 }
 
 .science-card {
@@ -723,6 +827,8 @@
   text-align: center;
   border: 1px solid #e2e8f0;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  max-width: 350px;
+  margin: 0 auto;
 }
 
 .science-card:hover {
@@ -749,11 +855,16 @@
   margin: 0;
 }
 
-/* Campus Ambassador Program */
 .campus-program {
-  padding: 80px 20px;
+  padding: 80px 10px;
   background: white;
   text-align: center;
+  max-width: 100vw;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .campus-program .section-header {
@@ -764,9 +875,13 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 50px;
-  max-width: 1200px;
+  max-width: 100vw;
+  width: 100%;
   margin: 0 auto;
+  padding: 0 10px;
   align-items: start;
+  box-sizing: border-box;
+  justify-content: center;
 }
 
 .program-benefits {
@@ -853,11 +968,16 @@
   min-height: 120px;
 }
 
-/* Real User Stories */
 .user-stories {
-  padding: 80px 20px;
+  padding: 80px 10px;
   background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
   text-align: center;
+  max-width: 100vw;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .user-stories .section-header {
@@ -869,8 +989,11 @@
   gap: 30px;
   justify-content: center;
   flex-wrap: wrap;
-  max-width: 1400px;
+  max-width: 100vw;
+  width: 100%;
   margin: 0 auto;
+  padding: 0 10px;
+  box-sizing: border-box;
 }
 
 .story-card {
@@ -882,6 +1005,7 @@
   max-width: 380px;
   text-align: left;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  margin: 0 auto;
 }
 
 .story-card:hover {
@@ -934,12 +1058,17 @@
   font-size: 1rem;
 }
 
-/* Download Extension CTA */
 .extension-cta {
-  padding: 60px 20px;
+  padding: 60px 10px;
   background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
   text-align: center;
   color: white;
+  max-width: 100vw;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .extension-cta .cta-content {
@@ -956,6 +1085,7 @@
   font-weight: 700;
   margin: 0;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  text-align: center;
 }
 
 .extension-cta .btn-primary {
@@ -972,7 +1102,6 @@
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
 }
 
-/* Animation Keyframes */
 @keyframes fadeInUp {
   to {
     opacity: 1;
@@ -1045,12 +1174,10 @@
   }
 }
 
-/* Scroll Animations */
 .feature-card, .step, .testimonial-card {
   transition: opacity 0.6s ease, transform 0.6s ease;
 }
 
-/* Modals and other existing styles remain the same */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -1198,14 +1325,12 @@
   text-decoration: none;
 }
 
-/* Responsive Design */
 @media (max-width: 1024px) {
   .hero {
     flex-direction: column;
     text-align: center;
     padding: 60px 20px;
   }
-  
   .hero-content {
     max-width: 100%;
     margin-bottom: 40px;
@@ -1213,79 +1338,63 @@
     flex-direction: column;
     align-items: center;
   }
-  
   .hero-buttons {
     justify-content: center;
     width: 100%;
     max-width: 300px;
   }
-  
   .hero-title {
     font-size: 2.8rem;
   }
-  
   .section-title {
     font-size: 2rem;
   }
-  
   .step:not(:last-child)::after {
     display: none;
   }
 }
-
 @media (max-width: 768px) {
   .hero {
     padding: 40px 20px;
   }
-  
   .hero-title {
     font-size: 2.3rem;
   }
-  
   .hero-subtitle {
     font-size: 1.1rem;
   }
-  
   .hero-buttons {
     flex-direction: column;
     gap: 16px;
     max-width: 100%;
     align-items: center;
   }
-  
   .btn {
     width: 100%;
     max-width: 250px;
   }
-  
   .features,
   .how-it-works,
   .testimonials,
   .cta-section {
     padding: 60px 20px;
   }
-  
   .section-title {
     font-size: 1.8rem;
   }
-  
   .testimonial-cards {
     grid-template-columns: 1fr;
   }
-  
   .steps {
     grid-template-columns: 1fr;
   }
-  
   .preview-stats {
     grid-template-columns: 1fr 1fr;
     gap: 12px;
   }
-  
   .stat-card {
     padding: 16px;
   }
-  
   .quiz-options {
     display: grid;
     grid-template-columns: 1fr;
@@ -1294,7 +1403,6 @@
     align-items: center;
     width: 100%;
   }
-  
   .quiz-option {
     font-size: 15px;
     padding: 14px;
@@ -1307,70 +1415,56 @@
     max-width: 300px;
     margin: 0 auto;
   }
-  
   .quiz-actions {
     flex-direction: column;
     align-items: center;
   }
-  
   .quiz-option {
     font-size: 14px;
     padding: 12px;
     min-height: 45px;
   }
-  
   .score-value {
     font-size: 3rem;
   }
-  
   .quiz-container,
   .quiz-results {
     padding: 25px;
   }
-  
   .quiz-question h3 {
     font-size: 18px;
     margin-bottom: 25px;
   }
-  
   .score-tip {
     padding: 15px;
   }
-  
   .score-tip p {
     font-size: 1rem;
   }
-  
   .score-label {
     font-size: 1rem;
     white-space: normal;
   }
-  
   .problem-stats {
     grid-template-columns: 1fr;
     gap: 20px;
     max-width: 500px;
   }
 }
-
 @media (max-width: 480px) {
   .hero-title {
     font-size: 2rem;
   }
-  
   .preview-stats {
     grid-template-columns: 1fr 1fr;
     gap: 10px;
   }
-  
   .stat-card {
     padding: 14px;
   }
-  
   .stat-value {
     font-size: 1.8rem;
   }
-  
   .stat-value.emoji {
     font-size: 2rem;
     font-family: "Segoe UI Emoji", "Segoe UI Symbol", "Apple Color Emoji", "Twemoji Mozilla", "Noto Color Emoji", sans-serif;
@@ -1379,21 +1473,17 @@
     -webkit-text-fill-color: inherit !important;
     background-clip: unset !important;
   }
-  
   .modal-content {
     margin: 10px;
   }
-  
   .wellness-calculator,
   .problem-statement {
     padding: 60px 15px;
   }
-  
   .quiz-container,
   .quiz-results {
     padding: 20px;
   }
-  
   .quiz-option {
     font-size: 14px;
     padding: 12px;
@@ -1405,118 +1495,88 @@
     width: 100%;
     max-width: 100%;
   }
-  
   .quiz-container,
   .quiz-results {
     padding: 20px;
   }
-  
   .score-value {
     font-size: 2.5rem;
   }
-  
   .score-label {
     font-size: 0.9rem;
   }
-  
   .quiz-actions .btn {
     width: 100%;
   }
-  
   .stat-label {
     font-size: 0.7rem;
   }
-  
   .problem-stats {
     gap: 15px;
     max-width: 100%;
   }
 }
-
-/* Additional mobile fixes for small screens */
 @media (max-width: 360px) {
   .quiz-option {
     font-size: 13px;
     padding: 10px;
     min-height: 40px;
   }
-  
   .stat-label {
     font-size: 0.65rem;
   }
 }
-
-/* Print Styles for Landing Page */
 @media print {
-  /* Reset backgrounds and colors for better printing */
   * {
     background: transparent !important;
     color: black !important;
     box-shadow: none !important;
     text-shadow: none !important;
   }
-  
-  /* Change fixed positioning to relative for print */
   * {
     position: static !important;
   }
-  
-  /* Ensure all landing page sections are visible */
   .landing-page {
     display: block !important;
     visibility: visible !important;
     opacity: 1 !important;
   }
-  
-  /* Make sure hero section content is visible */
   .hero {
     background: white !important;
     color: black !important;
   }
-  
   .hero-title, .hero-subtitle {
     color: black !important;
     background: none !important;
   }
-  
-  /* Ensure buttons are visible in print */
   .hero-buttons .btn {
     border: 1px solid #000 !important;
     background: #f0f0f0 !important;
     color: #000 !important;
   }
-  
-  /* Make sure section headers are visible */
   .section-header {
     color: black !important;
     background: none !important;
   }
-  
   .section-title, .section-subtitle {
     color: black !important;
     background: none !important;
   }
-  
-  /* Ensure quiz elements are visible */
   .quiz-container, .quiz-results {
     border: 1px solid #000 !important;
     box-shadow: none !important;
     background: white !important;
     color: black !important;
   }
-  
   .quiz-question h3 {
     color: black !important;
     background: none !important;
   }
-  
   .quiz-option {
     border: 1px solid #000 !important;
     background: #f0f0f0 !important;
     color: #000 !important;
   }
-  
-  /* Ensure score display is visible */
   .score-value {
     color: #000 !important;
     background: none !important;
@@ -1524,43 +1584,34 @@
     -webkit-text-fill-color: #000 !important;
     background-clip: unset !important;
   }
-  
   .score-label {
     color: #000 !important;
     background: none !important;
   }
-  
-  /* Ensure all cards and stat elements are visible */
   .stat-card {
     border: 1px solid #000 !important;
     background: white !important;
     color: black !important;
     box-shadow: none !important;
   }
-  
   .stat-value {
     color: #000 !important;
     background: none !important;
   }
-  
   .stat-value.emoji {
     color: #000 !important;
     font-family: "Segoe UI Emoji", "Segoe UI Symbol", "Apple Color Emoji", "Twemoji Mozilla", "Noto Color Emoji", sans-serif;
     background: none !important;
   }
-  
   .stat-label {
     color: #000 !important;
     background: none !important;
   }
-  
-  /* Ensure all grid layouts work in print */
   .preview-stats, .features-grid, .steps, .problem-stats,
   .science-content, .program-content, .program-benefits,
   .stories-carousel {
     display: block !important;
   }
-  
   .feature-card, .step, .stat-card, .science-card, .benefit-card {
     display: block !important;
     margin-bottom: 20px !important;
@@ -1568,13 +1619,9 @@
     background: white !important;
     color: black !important;
   }
-  
-  /* Hide interactive elements not needed in print */
   .dot, .ai-chat-button, .developer-mode-toggle {
     display: none !important;
   }
-  
-  /* Ensure all text is readable */
   h1, h2, h3, h4, h5, h6, p, li, div {
     color: #000 !important;
     background: none !important;

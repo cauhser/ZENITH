@@ -1,207 +1,1 @@
-export interface ExtensionData {
-  analytics: any[];
-  webcamData: any[];
-  continuousData: any[];
-}
-
-class ExtensionSyncService {
-  private isConnected = false;
-  private extensionId: string | null = null;
-  private listeners: Map<string, Function[]> = new Map();
-
-  async initialize(): Promise<boolean> {
-    if (typeof chrome === 'undefined' || !chrome.runtime) {
-      console.log('🚫 Chrome extension not available - running in standalone mode');
-      return false;
-    }
-
-    try {
-      const response = await this.sendMessageToExtension({ type: 'PING' });
-      if (response?.status === 'pong') {
-        this.isConnected = true;
-        this.extensionId = response.extensionId;
-        console.log('✅ Extension connected:', response.extensionId);
-        this.setupExtensionListeners();
-        return true;
-      }
-    } catch (error) {
-      console.error('❌ Extension connection failed:', error);
-    }
-    
-    return false;
-  }
-
-  private setupExtensionListeners() {
-    // Listen for messages from extension
-    chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-      this.handleExtensionMessage(request);
-      sendResponse({ received: true });
-      return true;
-    });
-
-    // Listen for extension storage changes
-    chrome.storage.onChanged.addListener((changes, namespace) => {
-      if (namespace === 'local') {
-        this.handleStorageChanges(changes);
-      }
-    });
-  }
-
-  private handleExtensionMessage(request: any) {
-    console.log('📨 Extension message:', request.type, request.data);
-    
-    switch (request.type) {
-      case 'CONTENT_ANALYSIS':
-        this.handleContentAnalysis(request.data);
-        break;
-      case 'WEBCAM_DATA':
-        this.handleWebcamData(request.data);
-        break;
-      case 'CONTINUOUS_DATA':
-        this.handleContinuousData(request.data);
-        break;
-      case 'PERMISSIONS_UPDATED':
-        this.handlePermissionsUpdate(request.permissions);
-        break;
-      case 'EXTENSION_DATA':
-        this.handleExtensionData(request.data);
-        break;
-    }
-  }
-
-  private handleContentAnalysis(data: any) {
-    this.emit('content-analysis', data);
-    
-    // Convert to EmotionData format
-    if (data.sentiment) {
-      const emotionData = {
-        emotion: data.sentiment.score > 0 ? 'happy' : data.sentiment.score < 0 ? 'sad' : 'neutral',
-        intensity: Math.abs(data.sentiment.score) * 100,
-        timestamp: Date.now(),
-        confidence: 0.8
-      };
-      this.emit('emotion-data', emotionData);
-    }
-  }
-
-  private handleWebcamData(data: any) {
-    this.emit('webcam-data', data);
-    
-    // Convert to EmotionData format
-    if (data.dominantEmotion) {
-      const emotionData = {
-        emotion: data.dominantEmotion,
-        intensity: data.emotionConfidence * 100,
-        timestamp: Date.now(),
-        confidence: data.emotionConfidence
-      };
-      this.emit('emotion-data', emotionData);
-    }
-  }
-
-  private handleContinuousData(data: any) {
-    this.emit('continuous-data', data);
-    
-    if (data.triggers && data.triggers.length > 0) {
-      this.emit('content-triggers', data.triggers);
-    }
-  }
-
-  private handleExtensionData(data: any) {
-    this.emit('extension-data', data);
-  }
-
-  private handlePermissionsUpdate(permissions: any) {
-    this.emit('permissions-updated', permissions);
-  }
-
-  private handleStorageChanges(changes: any) {
-    this.emit('storage-changed', changes);
-  }
-
-  // Event emitter methods
-  on(event: string, callback: Function) {
-    if (!this.listeners.has(event)) {
-      this.listeners.set(event, []);
-    }
-    this.listeners.get(event)!.push(callback);
-  }
-
-  off(event: string, callback: Function) {
-    const listeners = this.listeners.get(event);
-    if (listeners) {
-      const index = listeners.indexOf(callback);
-      if (index > -1) {
-        listeners.splice(index, 1);
-      }
-    }
-  }
-
-  private emit(event: string, data: any) {
-    const listeners = this.listeners.get(event);
-    if (listeners) {
-      listeners.forEach(callback => {
-        try {
-          callback(data);
-        } catch (error) {
-          console.error(`Error in event listener for ${event}:`, error);
-        }
-      });
-    }
-  }
-
-  async getExtensionData(): Promise<ExtensionData | null> {
-    if (!this.isConnected) return null;
-
-    try {
-      const [analytics, webcam, continuous] = await Promise.all([
-        this.sendMessageToExtension({ type: 'GET_ANALYTICS_DATA' }),
-        this.sendMessageToExtension({ type: 'GET_WEBCAM_DATA' }),
-        this.sendMessageToExtension({ type: 'GET_CONTINUOUS_DATA' })
-      ]);
-
-      return {
-        analytics: analytics?.analytics || [],
-        webcamData: webcam?.webcamData || [],
-        continuousData: continuous?.continuousData || []
-      };
-    } catch (error) {
-      console.error('Error fetching extension data:', error);
-      return null;
-    }
-  }
-
-  async triggerContentAnalysis(): Promise<any> {
-    if (!this.isConnected) throw new Error('Extension not connected');
-    
-    return this.sendMessageToExtension({ type: 'ANALYZE_PAGE' });
-  }
-
-  async startWebcamCollection(): Promise<any> {
-    if (!this.isConnected) throw new Error('Extension not connected');
-    
-    return this.sendMessageToExtension({ type: 'START_WEBCAM' });
-  }
-
-  private sendMessageToExtension(message: any): Promise<any> {
-    return new Promise((resolve, reject) => {
-      chrome.runtime.sendMessage(message, (response) => {
-        if (chrome.runtime.lastError) {
-          reject(chrome.runtime.lastError);
-        } else {
-          resolve(response);
-        }
-      });
-    });
-  }
-
-  getConnectionStatus() {
-    return {
-      isConnected: this.isConnected,
-      extensionId: this.extensionId
-    };
-  }
-}
-
-export const extensionSyncService = new ExtensionSyncService();
-export {};
+export interface ExtensionData {  analytics: any[];  webcamData: any[];  continuousData: any[];}class ExtensionSyncService {  private isConnected = false;  private extensionId: string | null = null;  private listeners: Map<string, Function[]> = new Map();  async initialize(): Promise<boolean> {    if (typeof chrome === 'undefined' || !chrome.runtime) {      console.log('🚫 Chrome extension not available - running in standalone mode');      return false;    }    try {      const response = await this.sendMessageToExtension({ type: 'PING' });      if (response?.status === 'pong') {        this.isConnected = true;        this.extensionId = response.extensionId;        console.log('✅ Extension connected:', response.extensionId);        this.setupExtensionListeners();        return true;      }    } catch (error) {      console.error('❌ Extension connection failed:', error);    }    return false;  }  private setupExtensionListeners() {    chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {      this.handleExtensionMessage(request);      sendResponse({ received: true });      return true;    });    chrome.storage.onChanged.addListener((changes, namespace) => {      if (namespace === 'local') {        this.handleStorageChanges(changes);      }    });  }  private handleExtensionMessage(request: any) {    console.log('📨 Extension message:', request.type, request.data);    switch (request.type) {      case 'CONTENT_ANALYSIS':        this.handleContentAnalysis(request.data);        break;      case 'WEBCAM_DATA':        this.handleWebcamData(request.data);        break;      case 'CONTINUOUS_DATA':        this.handleContinuousData(request.data);        break;      case 'PERMISSIONS_UPDATED':        this.handlePermissionsUpdate(request.permissions);        break;      case 'EXTENSION_DATA':        this.handleExtensionData(request.data);        break;    }  }  private handleContentAnalysis(data: any) {    this.emit('content-analysis', data);    if (data.sentiment) {      const emotionData = {        emotion: data.sentiment.score > 0 ? 'happy' : data.sentiment.score < 0 ? 'sad' : 'neutral',        intensity: Math.abs(data.sentiment.score) * 100,        timestamp: Date.now(),        confidence: 0.8      };      this.emit('emotion-data', emotionData);    }  }  private handleWebcamData(data: any) {    this.emit('webcam-data', data);    if (data.dominantEmotion) {      const emotionData = {        emotion: data.dominantEmotion,        intensity: data.emotionConfidence * 100,        timestamp: Date.now(),        confidence: data.emotionConfidence      };      this.emit('emotion-data', emotionData);    }  }  private handleContinuousData(data: any) {    this.emit('continuous-data', data);    if (data.triggers && data.triggers.length > 0) {      this.emit('content-triggers', data.triggers);    }  }  private handleExtensionData(data: any) {    this.emit('extension-data', data);  }  private handlePermissionsUpdate(permissions: any) {    this.emit('permissions-updated', permissions);  }  private handleStorageChanges(changes: any) {    this.emit('storage-changed', changes);  }  on(event: string, callback: Function) {    if (!this.listeners.has(event)) {      this.listeners.set(event, []);    }    this.listeners.get(event)!.push(callback);  }  off(event: string, callback: Function) {    const listeners = this.listeners.get(event);    if (listeners) {      const index = listeners.indexOf(callback);      if (index > -1) {        listeners.splice(index, 1);      }    }  }  private emit(event: string, data: any) {    const listeners = this.listeners.get(event);    if (listeners) {      listeners.forEach(callback => {        try {          callback(data);        } catch (error) {          console.error(`Error in event listener for ${event}:`, error);        }      });    }  }  async getExtensionData(): Promise<ExtensionData | null> {    if (!this.isConnected) return null;    try {      const [analytics, webcam, continuous] = await Promise.all([        this.sendMessageToExtension({ type: 'GET_ANALYTICS_DATA' }),        this.sendMessageToExtension({ type: 'GET_WEBCAM_DATA' }),        this.sendMessageToExtension({ type: 'GET_CONTINUOUS_DATA' })      ]);      return {        analytics: analytics?.analytics || [],        webcamData: webcam?.webcamData || [],        continuousData: continuous?.continuousData || []      };    } catch (error) {      console.error('Error fetching extension data:', error);      return null;    }  }  async triggerContentAnalysis(): Promise<any> {    if (!this.isConnected) throw new Error('Extension not connected');    return this.sendMessageToExtension({ type: 'ANALYZE_PAGE' });  }  async startWebcamCollection(): Promise<any> {    if (!this.isConnected) throw new Error('Extension not connected');    return this.sendMessageToExtension({ type: 'START_WEBCAM' });  }  private sendMessageToExtension(message: any): Promise<any> {    return new Promise((resolve, reject) => {      chrome.runtime.sendMessage(message, (response) => {        if (chrome.runtime.lastError) {          reject(chrome.runtime.lastError);        } else {          resolve(response);        }      });    });  }  getConnectionStatus() {    return {      isConnected: this.isConnected,      extensionId: this.extensionId    };  }}export const extensionSyncService = new ExtensionSyncService();export {};

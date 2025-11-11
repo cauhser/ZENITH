@@ -1,12 +1,10 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { WebSocketService } from '../services/websocket/websocket';
-
 export interface WebSocketMessage {
   type: string;
   data: any;
   timestamp: number;
 }
-
 export interface WebSocketStatus {
   isConnected: boolean;
   isConnecting: boolean;
@@ -15,8 +13,7 @@ export interface WebSocketStatus {
   connectionId: string | null;
   messageCount: number;
 }
-
-export const useWebSocket = (url: string = 'ws://localhost:30000') => {
+export const useWebSocket = (url: string = 'ws://localhost:3000') => {
   const [data, setData] = useState<any>(null);
   const [status, setStatus] = useState<WebSocketStatus>({
     isConnected: false,
@@ -26,13 +23,10 @@ export const useWebSocket = (url: string = 'ws://localhost:30000') => {
     connectionId: null,
     messageCount: 0
   });
-
   const [messages, setMessages] = useState<WebSocketMessage[]>([]);
   const [queuedMessages, setQueuedMessages] = useState<WebSocketMessage[]>([]);
   const webSocketService = useRef<WebSocketService | null>(null);
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-
-  // Initialize WebSocket service
   const initializeWebSocket = useCallback(async () => {
     try {
       setStatus(prev => ({
@@ -40,11 +34,8 @@ export const useWebSocket = (url: string = 'ws://localhost:30000') => {
         isConnecting: true,
         lastError: null
       }));
-
       webSocketService.current = new WebSocketService(url);
-      
       await webSocketService.current.initialize();
-      
       setStatus(prev => ({
         ...prev,
         isConnected: true,
@@ -52,9 +43,7 @@ export const useWebSocket = (url: string = 'ws://localhost:30000') => {
         isReconnecting: false,
         connectionId: webSocketService.current?.getConnectionId() || null
       }));
-
       console.log('✅ WebSocket connected successfully');
-
     } catch (error) {
       console.error('❌ WebSocket connection failed:', error);
       setStatus(prev => ({
@@ -63,30 +52,21 @@ export const useWebSocket = (url: string = 'ws://localhost:30000') => {
         isConnecting: false,
         lastError: error instanceof Error ? error.message : 'Connection failed'
       }));
-
-      // Schedule reconnection
       scheduleReconnection();
     }
   }, [url]);
-
-  // Schedule reconnection with exponential backoff
   const scheduleReconnection = useCallback(() => {
     if (reconnectTimeoutRef.current) {
       clearTimeout(reconnectTimeoutRef.current);
     }
-
-    const delay = Math.min(1000 * Math.pow(2, status.messageCount), 30000); // Max 30 seconds
-    
+    const delay = Math.min(1000 * Math.pow(2, status.messageCount), 30000); 
     reconnectTimeoutRef.current = setTimeout(() => {
       setStatus(prev => ({ ...prev, isReconnecting: true }));
       initializeWebSocket();
     }, delay);
   }, [initializeWebSocket, status.messageCount]);
-
-  // Send message through WebSocket
   const sendMessage = useCallback((type: string, data: any) => {
     if (!webSocketService.current || !status.isConnected) {
-      // Queue message for when connection is restored
       const message: WebSocketMessage = {
         type,
         data,
@@ -95,7 +75,6 @@ export const useWebSocket = (url: string = 'ws://localhost:30000') => {
       setQueuedMessages(prev => [...prev, message]);
       return false;
     }
-
     try {
       webSocketService.current.sendMessage(type, data);
       return true;
@@ -104,14 +83,10 @@ export const useWebSocket = (url: string = 'ws://localhost:30000') => {
       return false;
     }
   }, [status.isConnected]);
-
-  // Send queued messages when connection is restored
   const sendQueuedMessages = useCallback(() => {
     if (queuedMessages.length === 0 || !status.isConnected) return;
-
     const successfulMessages: WebSocketMessage[] = [];
     const failedMessages: WebSocketMessage[] = [];
-
     queuedMessages.forEach(message => {
       const success = sendMessage(message.type, message.data);
       if (success) {
@@ -120,75 +95,53 @@ export const useWebSocket = (url: string = 'ws://localhost:30000') => {
         failedMessages.push(message);
       }
     });
-
     setQueuedMessages(failedMessages);
-    
     if (successfulMessages.length > 0) {
       console.log(`✅ Sent ${successfulMessages.length} queued messages`);
     }
   }, [queuedMessages, status.isConnected, sendMessage]);
-
-  // Handle incoming messages
   const handleMessage = useCallback((message: WebSocketMessage) => {
     setMessages(prev => {
-      const newMessages = [...prev, message].slice(-100); // Keep last 100 messages
+      const newMessages = [...prev, message].slice(-100); 
       return newMessages;
     });
-
     setStatus(prev => ({
       ...prev,
       messageCount: prev.messageCount + 1
     }));
-
-    // Emit custom event for specific message types
     const event = new CustomEvent(`websocket-${message.type}`, {
       detail: message
     });
     window.dispatchEvent(event);
   }, []);
-
-  // Subscribe to specific message types
   const subscribe = useCallback((messageType: string, callback: (data: any) => void) => {
     const handler = (event: Event) => {
       const customEvent = event as CustomEvent<WebSocketMessage>;
       callback(customEvent.detail.data);
     };
-
     window.addEventListener(`websocket-${messageType}`, handler);
-
-    // Return unsubscribe function
     return () => {
       window.removeEventListener(`websocket-${messageType}`, handler);
     };
   }, []);
-
-  // Get messages by type
   const getMessagesByType = useCallback((type: string): WebSocketMessage[] => {
     return messages.filter(message => message.type === type);
   }, [messages]);
-
-  // Get latest message by type
   const getLatestMessage = useCallback((type?: string): WebSocketMessage | null => {
     const filtered = type ? messages.filter(msg => msg.type === type) : messages;
     return filtered.length > 0 ? filtered[filtered.length - 1] : null;
   }, [messages]);
-
-  // Clear messages
   const clearMessages = useCallback(() => {
     setMessages([]);
   }, []);
-
-  // Disconnect WebSocket
   const disconnect = useCallback(() => {
     if (webSocketService.current) {
       webSocketService.current.disconnect();
       webSocketService.current = null;
     }
-
     if (reconnectTimeoutRef.current) {
       clearTimeout(reconnectTimeoutRef.current);
     }
-
     setStatus({
       isConnected: false,
       isConnecting: false,
@@ -197,20 +150,14 @@ export const useWebSocket = (url: string = 'ws://localhost:30000') => {
       connectionId: null,
       messageCount: 0
     });
-
     console.log('🔌 WebSocket disconnected');
   }, []);
-
-  // Reconnect WebSocket
   const reconnect = useCallback(() => {
     disconnect();
     initializeWebSocket();
   }, [disconnect, initializeWebSocket]);
-
-  // Set up WebSocket event listeners
   useEffect(() => {
     if (!webSocketService.current) return;
-
     const handleConnect = () => {
       setStatus(prev => ({
         ...prev,
@@ -219,21 +166,16 @@ export const useWebSocket = (url: string = 'ws://localhost:30000') => {
         isReconnecting: false,
         lastError: null
       }));
-      
-      // Send queued messages when connected
       sendQueuedMessages();
     };
-
     const handleDisconnect = () => {
       setStatus(prev => ({
         ...prev,
         isConnected: false,
         isConnecting: false
       }));
-      
       scheduleReconnection();
     };
-
     const handleError = (error: Error) => {
       setStatus(prev => ({
         ...prev,
@@ -242,18 +184,13 @@ export const useWebSocket = (url: string = 'ws://localhost:30000') => {
         isConnecting: false
       }));
     };
-
     const handleMessageEvent = (message: WebSocketMessage) => {
       handleMessage(message);
     };
-
-    // Subscribe to WebSocket events
     webSocketService.current.on('connect', handleConnect);
     webSocketService.current.on('disconnect', handleDisconnect);
     webSocketService.current.on('error', handleError);
     webSocketService.current.on('message', handleMessageEvent);
-
-    // Cleanup function
     return () => {
       if (webSocketService.current) {
         webSocketService.current.off('connect', handleConnect);
@@ -263,37 +200,26 @@ export const useWebSocket = (url: string = 'ws://localhost:30000') => {
       }
     };
   }, [handleMessage, scheduleReconnection, sendQueuedMessages]);
-
-  // Initialize WebSocket on mount
   useEffect(() => {
     initializeWebSocket();
-
     return () => {
       disconnect();
     };
   }, [initializeWebSocket, disconnect]);
-
-  // Send heartbeat when connected
   useEffect(() => {
     if (!status.isConnected) return;
-
     const heartbeatInterval = setInterval(() => {
       sendMessage('heartbeat', {
         timestamp: Date.now(),
         userAgent: navigator.userAgent
       });
-    }, 30000); // Every 30 seconds
-
+    }, 30000); 
     return () => clearInterval(heartbeatInterval);
   }, [status.isConnected, sendMessage]);
-
   return {
-    // State
     status,
     messages,
     queuedMessages,
-    
-    // Actions
     sendMessage,
     subscribe,
     getMessagesByType,
@@ -301,8 +227,6 @@ export const useWebSocket = (url: string = 'ws://localhost:30000') => {
     clearMessages,
     disconnect,
     reconnect,
-    
-    // Derived state
     hasQueuedMessages: queuedMessages.length > 0,
     lastMessage: getLatestMessage(),
     connectionHealth: status.isConnected ? 'healthy' : 
@@ -310,12 +234,8 @@ export const useWebSocket = (url: string = 'ws://localhost:30000') => {
                      status.isConnecting ? 'connecting' : 'disconnected'
   };
 };
-
-// Specialized hook for wellness data
 export const useWellnessWebSocket = () => {
   const webSocket = useWebSocket();
-  
-  // Send wellness data
   const sendWellnessData = useCallback((data: {
     emotion?: string;
     attention?: number;
@@ -329,8 +249,6 @@ export const useWellnessWebSocket = () => {
       sessionId: localStorage.getItem('zenith-session-id')
     });
   }, [webSocket]);
-
-  // Send content analysis
   const sendContentAnalysis = useCallback((data: {
     url: string;
     title: string;
@@ -343,22 +261,15 @@ export const useWellnessWebSocket = () => {
       timestamp: Date.now()
     });
   }, [webSocket]);
-
-  // Subscribe to wellness recommendations
   const subscribeToRecommendations = useCallback((callback: (recommendation: any) => void) => {
     return webSocket.subscribe('wellness-recommendation', callback);
   }, [webSocket]);
-
-  // Subscribe to break reminders
   const subscribeToBreakReminders = useCallback((callback: (reminder: any) => void) => {
     return webSocket.subscribe('break-reminder', callback);
   }, [webSocket]);
-
-  // Get wellness insights
   const getWellnessInsights = useCallback(() => {
     return webSocket.getMessagesByType('wellness-insights');
   }, [webSocket]);
-
   return {
     ...webSocket,
     sendWellnessData,
@@ -368,5 +279,4 @@ export const useWellnessWebSocket = () => {
     getWellnessInsights
   };
 };
-
 export default useWebSocket;

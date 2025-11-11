@@ -2,229 +2,42 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <link rel="icon" href="%PUBLIC_URL%/Zenith_Logo_V01_32_32px.png" />
+    <link rel="icon" href="%PUBLIC_URL%/Blue-128px.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
     <meta
       name="description"
-      content="ZENITH Wellness - Digital Wellbeing Tracker"
+      content="ZENITH - Your Digital Wellness Companion"
     />
-    
-    <!-- Remove or comment out CSP for development -->
-    <!-- <meta http-equiv="Content-Security-Policy" content="..." /> -->
-    
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/Zenith_Logo_V01_128_128px.png" />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/Blue-128px.png" />
+    <!--
+      manifest.json provides metadata used when your web app is installed on a
+      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
+    -->
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    
-    <title>ZENITH Wellness</title>
-    
-    <!-- Print Styles -->
-    <style media="print">
-      /* Reset all styles for printing */
-      * {
-        background: transparent !important;
-        color: black !important;
-        box-shadow: none !important;
-        text-shadow: none !important;
-        position: static !important;
-      }
-      
-      /* Ensure all content is visible */
-      body {
-        font-size: 12pt;
-        line-height: 1.4;
-        background: white !important;
-        color: black !important;
-        margin: 0;
-        padding: 0;
-      }
-      
-      /* Make sure all sections are visible */
-      .hero, .features, .how-it-works, .testimonials, .problem-statement, 
-      .science-section, .campus-program, .user-stories, .wellness-calculator,
-      .cta-section, .landing-page, .dashboard {
-        display: block !important;
-        visibility: visible !important;
-        opacity: 1 !important;
-        page-break-inside: avoid;
-      }
-      
-      /* Ensure cards and sections have visible borders */
-      .card, .feature-card, .step, .testimonial-card, .stat-card,
-      .science-card, .benefit-card, .program-apply, .dashboard-card {
-        border: 1px solid #000 !important;
-        box-shadow: none !important;
-        page-break-inside: avoid;
-        display: block !important;
-        margin-bottom: 20px !important;
-      }
-      
-      /* Make buttons and interactive elements visible */
-      .btn, button {
-        border: 1px solid #000 !important;
-        background: #f0f0f0 !important;
-        color: #000 !important;
-        box-shadow: none !important;
-        display: inline-block !important;
-      }
-      
-      /* Ensure quiz options are visible */
-      .quiz-option {
-        border: 1px solid #000 !important;
-        background: #f0f0f0 !important;
-        color: #000 !important;
-        box-shadow: none !important;
-        display: block !important;
-        margin: 5px 0 !important;
-      }
-      
-      /* Make sure stat values are visible */
-      .stat-value, .score-value {
-        color: #000 !important;
-        background: none !important;
-        -webkit-background-clip: unset !important;
-        -webkit-text-fill-color: #000 !important;
-        background-clip: unset !important;
-      }
-      
-      /* Ensure emojis are visible in print */
-      .stat-value.emoji {
-        color: #000 !important;
-        font-family: "Segoe UI Emoji", "Segoe UI Symbol", "Apple Color Emoji", "Twemoji Mozilla", "Noto Color Emoji", sans-serif;
-        background: none !important;
-      }
-      
-      /* Remove animations and transitions for print */
-      *, *::before, *::after {
-        animation: none !important;
-        transition: none !important;
-      }
-      
-      /* Ensure grid layouts work in print */
-      .features-grid, .steps, .testimonial-cards, .science-content,
-      .program-content, .program-benefits, .preview-stats, .problem-stats,
-      .dashboard-grid, .wellness-metrics {
-        display: block !important;
-      }
-      
-      .feature-card, .step, .testimonial-card, .science-card,
-      .benefit-card, .stat-card, .metric-card {
-        display: block !important;
-        margin-bottom: 20px !important;
-        page-break-inside: avoid;
-      }
-      
-      /* Hide elements that shouldn't be printed */
-      .ai-chat-button, .dark-mode-toggle, .developer-mode-toggle,
-      .mood-report-btn, .sign-out-button, .extension-controls,
-      .debug-panel, .websocket-status {
-        display: none !important;
-      }
-      
-      /* Ensure charts and visual elements are visible */
-      .emotion-chart, .chart-bars, .bar-container, .heatmap-container {
-        border: 1px solid #000 !important;
-        page-break-inside: avoid;
-      }
-      
-      /* Make sure all text is readable */
-      h1, h2, h3, h4, h5, h6 {
-        color: #000 !important;
-        background: none !important;
-        page-break-after: avoid;
-      }
-      
-      p, li, div, span {
-        color: #000 !important;
-        background: none !important;
-      }
-      
-      /* Ensure form elements are visible */
-      input, textarea, select {
-        border: 1px solid #000 !important;
-        background: #fff !important;
-        color: #000 !important;
-      }
-    </style>
-    
-    <style>
-      /* Loading styles */
-      #loading-screen {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: #1e293b;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        z-index: 9999;
-        color: white;
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      }
-      
-      .loading-spinner {
-        width: 40px;
-        height: 40px;
-        border: 4px solid #334155;
-        border-top: 4px solid #3b82f6;
-        border-radius: 50%;
-        animation: spin 1s linear infinite;
-        margin-bottom: 16px;
-      }
-      
-      @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-      }
-      
-      .app-loaded #loading-screen {
-        display: none;
-      }
-      
-      body {
-        margin: 0;
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-          'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-          sans-serif;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-      }
-    </style>
+    <!--
+      Notice the use of %PUBLIC_URL% in the tags above.
+      It will be replaced with the URL of the `public` folder during the build.
+      Only files inside the `public` folder can be referenced from the HTML.
+
+      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
+      work correctly both with client-side routing and a non-root public URL.
+      Learn how to configure a non-root public URL by running `npm run build`.
+    -->
+    <title>ZENITH - Digital Wellness Companion</title>
   </head>
   <body>
-    <noscript>
-      <div style="padding: 20px; text-align: center;">
-        <h1>JavaScript Required</h1>
-        <p>You need to enable JavaScript to run this app.</p>
-      </div>
-    </noscript>
-    
-    <div id="loading-screen">
-      <div class="loading-spinner"></div>
-      <div>Loading ZENITH Wellness...</div>
-    </div>
-    
+    <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
-    
-    <script>
-      // Hide loading screen when app loads
-      window.addEventListener('load', function() {
-        setTimeout(function() {
-          document.body.classList.add('app-loaded');
-        }, 1000);
-      });
+    <!--
+      This HTML file is a template.
+      If you open it directly in the browser, you will see an empty page.
 
-      // Remove service worker registration entirely
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.getRegistrations().then(function(registrations) {
-          for(let registration of registrations) {
-            registration.unregister();
-          }
-        });
-      }
-    </script>
+      You can add webfonts, meta tags, or analytics to this file.
+      The build step will place the bundled scripts into the <body> tag.
+
+      To begin the development, run `npm start` or `yarn start`.
+      To create a production bundle, use `npm run build` or `yarn build`.
+    -->
   </body>
 </html>

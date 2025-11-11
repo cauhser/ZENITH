@@ -1,66 +1,40 @@
 {
   "manifest_version": 3,
-  "name": "ZENITH Wellness Tracker",
-  "version": "1.0.0",
-  "description": "Track your digital wellbeing with webcam and content analysis",
-  
+  "name": "ZENITH Wellness Companion",
+  "version": "1.0",
+  "description": "AI-powered digital wellness companion for mindful technology use",
   "permissions": [
     "activeTab",
     "storage",
-    "tabs",
+    "notifications",
     "alarms",
-    "scripting",
-    "webNavigation"
+    "tabs"
   ],
-  
   "host_permissions": [
-    "https://*/*",
-    "http://*/*"
+    "<all_urls>"
   ],
-  
+  "action": {
+    "default_popup": "popup-mobile.html",
+    "default_icon": {
+      "16": "icons/BlueLogo_32px.png",
+      "32": "icons/BlueLogo_32px.png",
+      "48": "icons/BlueLogo_32px.png",
+      "128": "icons/BlueLogo_32px.png"
+    }
+  },
+  "icons": {
+    "16": "icons/BlueLogo_32px.png",
+    "32": "icons/BlueLogo_32px.png",
+    "48": "icons/BlueLogo_32px.png",
+    "128": "icons/BlueLogo_32px.png"
+  },
   "background": {
     "service_worker": "background.js"
   },
-  
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["content.js"],
-      "run_at": "document_idle",
-      "all_frames": false
+      "js": ["content.js"]
     }
-  ],
-  
-  "action": {
-    "default_popup": "popup.html",
-    "default_title": "ZENITH Wellness - Click to enable",
-    "default_icon": {
-      "16": "icons/Zenith_Logo_V01_16_16px.png",
-      "32": "icons/Zenith_Logo_V01_32_32px.png",
-      "48": "icons/Zenith_Logo_V01_48_48px.png",
-      "128": "icons/Zenith_Logo_V01_128_128px.png"
-    }
-  },
-  
-  "web_accessible_resources": [
-    {
-      "resources": [
-        "popup.html",
-        "popup.js",
-        "popup.css",
-        "popup-mobile.html",
-        "popup-mobile.js",
-        "popup-mobile.css",
-        "permission-request.html",
-        "permission-request.js",
-        "permission-request.css",
-        "dashboard-integration.js"
-      ],
-      "matches": ["<all_urls>"]
-    }
-  ],
-  
-  "content_security_policy": {
-    "extension_pages": "script-src 'self'; object-src 'self'"
-  }
+  ]
 }

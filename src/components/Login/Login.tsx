@@ -1,87 +1,1 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import './Login.css';
-
-const Login: React.FC = () => {
-  const navigate = useNavigate();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-    
-    // Simulate API call
-    setTimeout(() => {
-      setIsLoading(false);
-      navigate('/dashboard');
-    }, 1500);
-  };
-
-  return (
-    <div className="login-page">
-      <div className="login-container">
-        <div className="login-header">
-          <h1>Welcome Back</h1>
-          <p>Sign in to your Zenith Wellness account</p>
-        </div>
-        
-        <form onSubmit={handleSubmit} className="login-form">
-          <div className="form-group">
-            <label htmlFor="email">Email</label>
-            <input
-              type="email"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              placeholder="your.email@example.com"
-            />
-          </div>
-          
-          <div className="form-group">
-            <label htmlFor="password">Password</label>
-            <input
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              placeholder="••••••••"
-            />
-          </div>
-          
-          <div className="form-options">
-            <label className="checkbox-label">
-              <input type="checkbox" />
-              Remember me
-            </label>
-            <a href="#" className="forgot-password">Forgot password?</a>
-          </div>
-          
-          <button 
-            type="submit" 
-            className="btn btn-primary btn-block"
-            disabled={isLoading}
-          >
-            {isLoading ? (
-              <>
-                <span className="loading-spinner"></span>
-                Signing In...
-              </>
-            ) : (
-              'Sign In'
-            )}
-          </button>
-        </form>
-        
-        <div className="login-footer">
-          <p>Don't have an account? <a href="#" onClick={(e) => { e.preventDefault(); navigate('/signup'); }}>Sign up</a></p>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-export default Login;
+import React, { useState } from 'react';import { useNavigate } from 'react-router-dom';import './Login.css';const Login: React.FC = () => {  const navigate = useNavigate();  const [email, setEmail] = useState('');  const [password, setPassword] = useState('');  const [isLoading, setIsLoading] = useState(false);  const handleSubmit = async (e: React.FormEvent) => {    e.preventDefault();    setIsLoading(true);    setTimeout(() => {      setIsLoading(false);      navigate('/dashboard');    }, 1500);  };  return (    <div className="login-page">      <div className="login-container">        <div className="login-header">          <h1>Welcome Back</h1>          <p>Sign in to your Zenith Wellness account</p>        </div>        <form onSubmit={handleSubmit} className="login-form">          <div className="form-group">            <label htmlFor="email">Email</label>            <input              type="email"              id="email"              value={email}              onChange={(e) => setEmail(e.target.value)}              required              placeholder="your.email@example.com"            />          </div>          <div className="form-group">            <label htmlFor="password">Password</label>            <input              type="password"              id="password"              value={password}              onChange={(e) => setPassword(e.target.value)}              required              placeholder="••••••••"            />          </div>          <div className="form-options">            <label className="checkbox-label">              <input type="checkbox" />              Remember me            </label>            <a href="#" className="forgot-password">Forgot password?</a>          </div>          <button             type="submit"             className="btn btn-primary btn-block"            disabled={isLoading}          >            {isLoading ? (              <>                <span className="loading-spinner"></span>                Signing In...              </>            ) : (              'Sign In'            )}          </button>        </form>        <div className="login-footer">          <p>Don't have an account? <a href="#" onClick={(e) => { e.preventDefault(); navigate('/signup'); }}>Sign up</a></p>        </div>      </div>    </div>  );};export default Login;

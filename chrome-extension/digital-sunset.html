@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Digital Sunset - ZENITH Wellness</title>
+  <link rel="stylesheet" href="dashboard.css">
+  <style>
+    .sunset-container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    .sunset-header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    
+    .sunset-header h1 {
+      font-size: 2rem;
+      color: #1e293b;
+      margin-bottom: 10px;
+    }
+    
+    .sunset-content {
+      background: white;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 4px 12px rgba(22, 103, 201, 0.1);
+      border: 1px solid #e2e8f0;
+      margin-bottom: 30px;
+    }
+    
+    .time-setting {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+    
+    .time-setting label {
+      font-weight: 600;
+      color: #1e293b;
+      font-size: 1.1rem;
+      min-width: 150px;
+    }
+    
+    .time-input {
+      padding: 12px 15px;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      font-size: 1rem;
+      background: white;
+      flex: 1;
+    }
+    
+    .time-input:focus {
+      outline: none;
+      border-color: #1667c9;
+      box-shadow: 0 0 0 3px rgba(22, 103, 201, 0.1);
+    }
+    
+    .protection-toggle {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    
+    .protection-toggle span {
+      font-weight: 600;
+      color: #1e293b;
+      font-size: 1.1rem;
+      flex: 1;
+    }
+    
+    .protection-features h4 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 15px;
+      color: #1e293b;
+    }
+    
+    .feature-list {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    
+    .feature-item {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    
+    .feature-item span {
+      color: #1e293b;
+      font-size: 0.95rem;
+      line-height: 1.4;
+    }
+    
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 24px;
+    }
+    
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #cbd5e1;
+      transition: .4s;
+      border-radius: 24px;
+    }
+    
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 20px;
+      width: 20px;
+      left: 2px;
+      bottom: 2px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+    
+    input:checked + .slider {
+      background: linear-gradient(135deg, #1667c9, #1e40af);
+    }
+    
+    input:checked + .slider:before {
+      transform: translateX(26px);
+    }
+    
+    .sunset-preview {
+      background: linear-gradient(to bottom, #87CEEB, #FFA07A, #FF6347);
+      border-radius: 16px;
+      padding: 30px;
+      text-align: center;
+      color: white;
+      margin: 30px 0;
+    }
+    
+    .sunset-preview h3 {
+      margin: 0 0 15px 0;
+      font-size: 1.5rem;
+    }
+    
+    .sunset-preview p {
+      margin: 0;
+      font-size: 1.1rem;
+      opacity: 0.9;
+    }
+    
+    .schedule-list {
+      margin-top: 30px;
+    }
+    
+    .schedule-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 15px 0;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    
+    .schedule-item:last-child {
+      border-bottom: none;
+    }
+    
+    .schedule-time {
+      font-weight: 600;
+      color: #1e293b;
+    }
+    
+    .schedule-action {
+      color: #64748b;
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard-container">
+    <div class="dashboard-header">
+      <h1 id="logo" style="cursor: pointer;">🌅 Digital Sunset</h1>
+      <div class="header-actions">
+        <button class="header-btn secondary" id="back-btn">← Back to Dashboard</button>
+      </div>
+    </div>
+    
+    <div class="sunset-container">
+      <div class="sunset-header">
+        <h1>🌅 Digital Sunset</h1>
+        <p>Automatically dim your screen and reduce blue light to promote better sleep</p>
+      </div>
+      
+      <div class="sunset-content">
+        <div class="time-setting">
+          <label for="sunset-time">Sunset Time:</label>
+          <input type="time" id="sunset-time" class="time-input" value="22:00">
+        </div>
+        
+        <div class="protection-toggle">
+          <span>Digital Sunset Protection</span>
+          <label class="toggle-switch">
+            <input type="checkbox" id="protection-toggle" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
+        
+        <div class="protection-features">
+          <h4>Protection Features</h4>
+          <div class="feature-list">
+            <div class="feature-item">
+              <label class="toggle-switch">
+                <input type="checkbox" checked>
+                <span class="slider"></span>
+              </label>
+              <span>Reduce blue light emission</span>
+            </div>
+            <div class="feature-item">
+              <label class="toggle-switch">
+                <input type="checkbox" checked>
+                <span class="slider"></span>
+              </label>
+              <span>Dim screen brightness</span>
+            </div>
+            <div class="feature-item">
+              <label class="toggle-switch">
+                <input type="checkbox">
+                <span class="slider"></span>
+              </label>
+              <span>Auto-close social media apps</span>
+            </div>
+            <div class="feature-item">
+              <label class="toggle-switch">
+                <input type="checkbox" checked>
+                <span class="slider"></span>
+              </label>
+              <span>Send bedtime reminder</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="sunset-preview">
+          <h3>🌅 Sunset Preview</h3>
+          <p>Your screen will gradually transition to warmer colors</p>
+        </div>
+        
+        <div class="schedule-list">
+          <h4>Weekly Schedule</h4>
+          <div class="schedule-item">
+            <div>
+              <div class="schedule-time">🌙 10:00 PM</div>
+              <div class="schedule-action">Digital Sunset activates</div>
+            </div>
+            <div>Mon-Fri</div>
+          </div>
+          <div class="schedule-item">
+            <div>
+              <div class="schedule-time">🌙 11:00 PM</div>
+              <div class="schedule-action">Digital Sunset activates</div>
+            </div>
+            <div>Sat-Sun</div>
+          </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 30px;">
+          <button class="btn btn-primary" id="save-btn" style="padding: 12px 30px;">Save Settings</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Back button
+      const backBtn = document.getElementById('back-btn');
+      if (backBtn) {
+        backBtn.addEventListener('click', function() {
+          window.location.href = 'dashboard.html';
+        });
+      }
+      
+      // Save button
+      const saveBtn = document.getElementById('save-btn');
+      if (saveBtn) {
+        saveBtn.addEventListener('click', function() {
+          alert('Digital Sunset settings saved successfully');
+        });
+      }
+      
+      // Logo click
+      const logo = document.getElementById('logo');
+      if (logo) {
+        logo.addEventListener('click', function() {
+          window.location.href = 'dashboard.html';
+        });
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,122 +1,1 @@
-.trigger-word-cloud {
-  background: white;
-  border-radius: 20px;
-  padding: 25px;
-  box-shadow: 0 4px 12px rgba(22, 103, 201, 0.1);
-  border: 1px solid #e2e8f0;
-  margin-bottom: 30px;
-}
-
-.cloud-header {
-  margin-bottom: 20px;
-}
-
-.cloud-header h3 {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #1e293b;
-  margin: 0 0 8px 0;
-}
-
-.cloud-subtitle {
-  font-size: 1rem;
-  color: #64748b;
-  margin: 0;
-  font-weight: 500;
-}
-
-.cloud-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  gap: 15px;
-  min-height: 200px;
-  padding: 20px;
-  background: #f8fafc;
-  border-radius: 16px;
-  margin-bottom: 20px;
-  position: relative;
-  overflow: hidden;
-}
-
-.cloud-container::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, #6366f1, #8b5cf6);
-}
-
-.word-item {
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-  padding: 5px 10px;
-  border-radius: 8px;
-}
-
-.word-item:hover {
-  transform: scale(1.1) rotate(-2deg);
-  background: rgba(255, 255, 255, 0.8);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  z-index: 1;
-}
-
-.cloud-footer {
-  text-align: center;
-}
-
-.cloud-footer p {
-  font-size: 0.9rem;
-  color: #94a3b8;
-  margin: 0;
-  font-weight: 500;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .trigger-word-cloud {
-    padding: 20px;
-  }
-  
-  .cloud-header h3 {
-    font-size: 1.3rem;
-  }
-  
-  .cloud-container {
-    min-height: 180px;
-    padding: 15px;
-  }
-  
-  .word-item {
-    padding: 3px 8px;
-  }
-}
-
-@media (max-width: 480px) {
-  .trigger-word-cloud {
-    padding: 15px;
-  }
-  
-  .cloud-header h3 {
-    font-size: 1.2rem;
-  }
-  
-  .cloud-subtitle {
-    font-size: 0.9rem;
-  }
-  
-  .cloud-container {
-    min-height: 160px;
-    padding: 10px;
-    gap: 10px;
-  }
-  
-  .word-item {
-    padding: 2px 6px;
-  }
-}
+.trigger-word-cloud {  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);  border-radius: 20px;  padding: 25px;  box-shadow: 0 8px 24px rgba(22, 103, 201, 0.1);  border: 1px solid #e2e8f0;  margin-bottom: 30px;  position: relative;  animation: fadeIn 0.8s ease-out;  background-size: 200% 200%;  animation: gradientShift 8s ease infinite;  overflow: hidden;}.trigger-word-cloud::before {  content: '';  position: absolute;  top: -50%;  right: -50%;  width: 200px;  height: 200px;  background: radial-gradient(circle, rgba(22, 103, 201, 0.1) 0%, transparent 70%);  border-radius: 50%;  z-index: 0;  animation: pulse 4s infinite;}.trigger-word-cloud::after {  content: '';  position: absolute;  bottom: -30%;  left: -30%;  width: 150px;  height: 150px;  background: radial-gradient(circle, rgba(30, 64, 175, 0.1) 0%, transparent 70%);  border-radius: 50%;  z-index: 0;  animation: pulse 6s infinite;}.cloud-header {  margin-bottom: 20px;  position: relative;  z-index: 1;}.cloud-header h3 {  font-size: 1.5rem;  font-weight: 800;  color: #1e293b;  margin: 0 0 8px 0;  background: linear-gradient(135deg, #1667c9, #1e40af);  -webkit-background-clip: text;  -webkit-text-fill-color: transparent;  background-clip: text;  position: relative;  z-index: 1;  animation: slideInLeft 0.8s ease-out;}.cloud-subtitle {  font-size: 1rem;  color: #64748b;  margin: 0;  font-weight: 500;  position: relative;  z-index: 1;  animation: slideInLeft 0.9s ease-out;}.cloud-container {  display: flex;  flex-wrap: wrap;  justify-content: center;  align-items: center;  gap: 15px;  min-height: 200px;  padding: 25px;  background: linear-gradient(145deg, #f1f5f9, #e2e8f0);  border-radius: 16px;  margin-bottom: 20px;  position: relative;  overflow: hidden;  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.05);  border: 1px solid rgba(226, 232, 240, 0.7);  animation: fadeIn 1s ease-out;  animation-delay: 0.3s;  animation-fill-mode: backwards;}.cloud-container::before {  content: '';  position: absolute;  top: 0;  left: 0;  right: 0;  height: 4px;  background: linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899);  border-radius: 2px 2px 0 0;}.word-item {  font-weight: 600;  cursor: pointer;  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);  position: relative;  padding: 8px 12px;  border-radius: 12px;  background: rgba(255, 255, 255, 0.7);  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);  border: 1px solid rgba(255, 255, 255, 0.5);  backdrop-filter: blur(4px);  animation: float 3s ease-in-out infinite;  animation-delay: calc(var(--delay) * 0.1s);}.word-item:hover {  transform: scale(1.15) rotate(-3deg);  background: rgba(255, 255, 255, 0.95);  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);  z-index: 10;  border-color: rgba(255, 255, 255, 0.9);}.cloud-footer {  text-align: center;  position: relative;  z-index: 1;  animation: fadeIn 1s ease-out;  animation-delay: 0.5s;  animation-fill-mode: backwards;}.cloud-footer p {  font-size: 0.9rem;  color: #94a3b8;  margin: 0;  font-weight: 500;  display: flex;  align-items: center;  justify-content: center;  gap: 8px;}.cloud-footer p::before {  content: '✨';  font-size: 1.1rem;}@media (max-width: 768px) {  .trigger-word-cloud {    padding: 20px;  }  .cloud-header h3 {    font-size: 1.3rem;  }  .cloud-container {    min-height: 180px;    padding: 15px;  }  .word-item {    padding: 3px 8px;  }}@media (max-width: 480px) {  .trigger-word-cloud {    padding: 15px;  }  .cloud-header h3 {    font-size: 1.2rem;  }  .cloud-subtitle {    font-size: 0.9rem;  }  .cloud-container {    min-height: 160px;    padding: 10px;    gap: 10px;  }  .word-item {    padding: 2px 6px;  }}@keyframes fadeIn {  from {    opacity: 0;  }  to {    opacity: 1;  }}@keyframes slideInLeft {  from {    transform: translateX(-20px);    opacity: 0;  }  to {    transform: translateX(0);    opacity: 1;  }}@keyframes slideInRight {  from {    transform: translateX(20px);    opacity: 0;  }  to {    transform: translateX(0);    opacity: 1;  }}@keyframes slideIn {  from {    transform: translateY(20px);    opacity: 0;  }  to {    transform: translateY(0);    opacity: 1;  }}@keyframes gradientShift {  0% {    background-position: 0% 50%;  }  50% {    background-position: 100% 50%;  }  100% {    background-position: 0% 50%;  }}@keyframes pulse {  0% {    transform: scale(1);    opacity: 1;  }  50% {    transform: scale(1.05);    opacity: 0.7;  }  100% {    transform: scale(1);    opacity: 1;  }}@keyframes float {  0% {    transform: translateY(0px);  }  50% {    transform: translateY(-10px);  }  100% {    transform: translateY(0px);  }}

@@ -1,16 +1,25 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useStore } from '../../store';
 import EmotionChart from '../EmotionChart/EmotionChart';
+import EmotionCalendar from './EmotionCalendar';
 import TriggerWordCloud from './TriggerWordCloud';
+import DailyWellnessPulse from './DailyWellnessPulse';
+import TriggerRadar from './TriggerRadar';
+import AIWellnessCoach from './AIWellnessCoach';
+import DigitalSunsetScheduler from './DigitalSunsetScheduler';
+import FocusFlow from './FocusFlow';
+import SafeScrollFeed from './SafeScrollFeed';
+import EmotionTimelineReplay from './EmotionTimelineReplay';
+import CommunityPulse from './CommunityPulse';
+import ExportWellnessReport from './ExportWellnessReport';
+import ProactiveNudgeEngine from './ProactiveNudgeEngine';
+import CampusResourceFinder from './CampusResourceFinder';
 import { WebSocketService } from '../../services/websocket/websocket';
 import { EmotionData, GazeData } from '../../types/wellness';
 import './EnhancedDashboard.css';
+import './WellnessFeatures.css';
 import { useNavigate } from 'react-router-dom';
-
-// Create WebSocket service instance
-const websocketService = new WebSocketService('ws://localhost:3000');
-
-// Enhanced emotion detection hook
+const websocketService = new WebSocketService('ws://localhost:8080');
 const useEmotionDetection = () => {
   const [isInitialized, setIsInitialized] = useState(false);
   const [isDetecting, setIsDetecting] = useState(false);
@@ -18,7 +27,6 @@ const useEmotionDetection = () => {
   const [performanceMetrics, setPerformanceMetrics] = useState<any>(null);
   const [initializationError, setInitializationError] = useState<string | null>(null);
   const [isInitializing, setIsInitializing] = useState(false);
-
   const initializeDetection = useCallback(async () => {
     setIsInitializing(true);
     setInitializationError(null);
@@ -39,12 +47,10 @@ const useEmotionDetection = () => {
       setIsInitializing(false);
     }
   }, []);
-
   const toggleDetection = () => {
     if (!isInitialized) return;
     setIsDetecting(!isDetecting);
   };
-
   return {
     isInitialized,
     isDetecting,
@@ -59,14 +65,10 @@ const useEmotionDetection = () => {
     isInitializing
   };
 };
-
-// Update the component props
 interface EnhancedDashboardProps {
   darkMode?: boolean;
   toggleDarkMode?: () => void;
 }
-
-// Update the component signature
 const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({ darkMode, toggleDarkMode }) => {
   const navigate = useNavigate();
   const {
@@ -84,7 +86,6 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({ darkMode, toggleD
     updateWellnessScore,
     updateAttentionMetrics
   } = useStore();
-  
   const {
     isInitialized,
     isDetecting,
@@ -98,12 +99,12 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({ darkMode, toggleD
     hasCamera,
     isInitializing
   } = useEmotionDetection();
-
   const [breakAlert, setBreakAlert] = useState(false);
   const [showEmotionHistory, setShowEmotionHistory] = useState(false);
   const [showDeveloperMode, setShowDeveloperMode] = useState(false);
+  const [showHiddenMenu, setShowHiddenMenu] = useState(false);
   const [websocketStatus, setWebsocketStatus] = useState<'connected' | 'connecting' | 'disconnected'>('disconnected');
-  const [timeInterval, setTimeInterval] = useState('1d'); // Default to day view
+  const [timeInterval, setTimeInterval] = useState('1d'); 
   const [calendarMonth, setCalendarMonth] = useState(new Date().getMonth());
   const [calendarYear, setCalendarYear] = useState(2023);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
@@ -111,8 +112,63 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({ darkMode, toggleD
   const [showChatbox, setShowChatbox] = useState(false);
   const [chatMessages, setChatMessages] = useState<Array<{text: string, isUser: boolean}>>([]);
   const [chatInput, setChatInput] = useState('');
-
-  // New state for additional features
+  const [showWellnessPulse, setShowWellnessPulse] = useState(true); 
+  const hiddenMenuRef = useRef<HTMLDivElement>(null);
+  const [campusPulse, setCampusPulse] = useState({
+    campus: 'HKU',
+    trendingTopic: 'FYP',
+    percentage: 68,
+    message: '"FYP" spiking (68% today)'
+  });
+  const [trendData, setTrendData] = useState({
+    change: 6,
+    period: 'yesterday'
+  });
+  const [sectionSizes, setSectionSizes] = useState<Record<string, { width: number; height: number }>>({
+    'emotion-timeline': { width: 400, height: 300 },
+    'trigger-radar': { width: 400, height: 300 },
+    'platform-breakdown': { width: 400, height: 300 },
+    'top-triggers': { width: 400, height: 300 },
+    'safe-scroll': { width: 400, height: 300 }
+  });
+  
+  const generateSimulatedCampusPulse = () => {
+    const campuses = ['HKU', 'CUHK', 'PolyU', 'CityU', 'HKUST'];
+    const topics = [
+      'FYP', 'exam', 'ghosted', 'internship', 'research', 'career',
+      'housing', 'mental health', 'stress', 'relationships', 'grades'
+    ];
+    const campus = campuses[Math.floor(Math.random() * campuses.length)];
+    const trendingTopic = topics[Math.floor(Math.random() * topics.length)];
+    const percentage = Math.floor(Math.random() * 50) + 40; 
+    return {
+      campus,
+      trendingTopic,
+      percentage,
+      message: `"${trendingTopic}" trending at ${percentage}% today at ${campus}`
+    };
+  };
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCampusPulse(generateSimulatedCampusPulse());
+    }, 30000); 
+    return () => clearInterval(interval);
+  }, []);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const change = Math.floor(Math.random() * 5) - 2;
+      const newScore = Math.max(0, Math.min(100, wellnessScore + change));
+      updateWellnessScore(newScore);
+      const trendChange = Math.floor(Math.random() * 11) - 5; 
+      const periods = ['yesterday', 'last week', 'last month'];
+      const period = periods[Math.floor(Math.random() * periods.length)];
+      setTrendData({
+        change: trendChange,
+        period
+      });
+    }, 10000); 
+    return () => clearInterval(interval);
+  }, [wellnessScore, updateWellnessScore]);
   const [focusSessions, setFocusSessions] = useState<Array<{start: number, end: number, duration: number}>>([]);
   const [productivityScore, setProductivityScore] = useState(75);
   const [distractionLog, setDistractionLog] = useState<Array<{time: number, type: string, duration: number}>>([]);
@@ -126,38 +182,27 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({ darkMode, toggleD
     weekly: { target: 40, current: 32, unit: 'hours' },
     monthly: { target: 160, current: 120, unit: 'hours' }
   });
-
-  // Add state for wellness challenge
   const [currentChallenge, setCurrentChallenge] = useState({
     title: "Digital Detox Thursday",
     description: "Track usage and earn badge",
     progress: 65,
     badge: "🧘"
   });
-
-  // Function to start a focus session
   const startFocusSession = () => {
     const startTime = Date.now();
-    // In a real implementation, this would start a timer
     console.log('Focus session started at:', new Date(startTime).toLocaleTimeString());
   };
-
-  // Function to log a distraction
   const logDistraction = (type: string) => {
     const newDistraction = {
       time: Date.now(),
       type,
-      duration: Math.floor(Math.random() * 10) + 1 // Random duration 1-10 minutes
+      duration: Math.floor(Math.random() * 10) + 1 
     };
     setDistractionLog(prev => [...prev, newDistraction]);
   };
-
-  // Function to add a wellness tip
   const addWellnessTip = (tip: string) => {
     setWellnessTips(prev => [...prev, tip]);
   };
-
-  // Function to update goal tracking
   const updateGoal = (period: 'daily' | 'weekly' | 'monthly', increment: number) => {
     setGoalTracking(prev => ({
       ...prev,
@@ -167,12 +212,8 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({ darkMode, toggleD
       }
     }));
   };
-
-  // Function to generate productivity insights
   const generateProductivityInsights = () => {
     const insights = [];
-    
-    // Analyze focus sessions
     if (focusSessions.length > 0) {
       const avgDuration = focusSessions.reduce((sum, session) => sum + session.duration, 0) / focusSessions.length;
       if (avgDuration > 30) {
@@ -181,94 +222,64 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({ darkMode, toggleD
         insights.push("💡 Try to extend your focus sessions for better productivity.");
       }
     }
-    
-    // Analyze distractions
     if (distractionLog.length > 5) {
       insights.push("⚠️ You've had many distractions today. Consider blocking distracting websites.");
     }
-    
-    // Analyze goals
     if (goalTracking.daily.current >= goalTracking.daily.target) {
       insights.push("🏆 You've met your daily focus goal!");
     } else {
       const remaining = goalTracking.daily.target - goalTracking.daily.current;
       insights.push(`🎯 You need ${remaining} more ${goalTracking.daily.unit} to meet your daily goal.`);
     }
-    
     return insights;
   };
-
-  // Function to handle day click in calendar
   const handleDayClick = (date: Date | null) => {
     if (date) {
       setSelectedDate(date);
       setShowHourlyView(true);
     }
   };
-
-  // Function to handle chat submit
   const handleChatSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (chatInput.trim() === '') return;
-    
-    // Add user message
     const newUserMessage = { text: chatInput, isUser: true };
     setChatMessages(prev => [...prev, newUserMessage]);
-    
-    // Simulate AI response
     const aiResponse = { 
       text: `I understand you're feeling ${currentEmotion}. It's important to take care of your emotional wellbeing. Would you like some specific advice or resources?`, 
       isUser: false 
     };
-    
-    // Add AI response after a short delay
     setTimeout(() => {
       setChatMessages(prev => [...prev, aiResponse]);
     }, 1000);
-    
     setChatInput('');
   };
-
-  // Function to get hourly emotion data for a specific date
   const getHourlyEmotionData = (date: Date) => {
-    // This is a mock implementation - in a real app, you would fetch actual data
     const hours = Array.from({ length: 24 }, (_, i) => i);
     return hours.map(hour => {
-      // Create a more realistic pattern based on time of day
       const emotions = ['happy', 'sad', 'anxious', 'neutral', 'stressed', 'focused', 'relaxed'];
       let emotion;
-      
-      // Simulate typical daily emotion patterns
       if (hour >= 6 && hour <= 9) {
-        // Morning - often neutral or happy
         emotion = Math.random() > 0.7 ? 'happy' : 'neutral';
       } else if (hour >= 10 && hour <= 12) {
-        // Late morning - often focused
         emotion = Math.random() > 0.6 ? 'focused' : 'neutral';
       } else if (hour >= 13 && hour <= 14) {
-        // Afternoon - can be stressed or relaxed
         emotion = Math.random() > 0.5 ? 'stressed' : 'relaxed';
       } else if (hour >= 15 && hour <= 18) {
-        // Evening - mixed emotions
         const emotionOptions = ['happy', 'neutral', 'stressed', 'focused'];
         emotion = emotionOptions[Math.floor(Math.random() * emotionOptions.length)];
       } else {
-        // Night - often relaxed or neutral
         emotion = Math.random() > 0.6 ? 'relaxed' : 'neutral';
       }
-      
-      // Intensity varies throughout the day
-      let intensity = 50; // Base intensity
+      let intensity = 50; 
       if (hour >= 6 && hour <= 9) {
-        intensity = 60 + Math.random() * 20; // Morning energy
+        intensity = 60 + Math.random() * 20; 
       } else if (hour >= 12 && hour <= 14) {
-        intensity = 70 + Math.random() * 30; // Midday peak
+        intensity = 70 + Math.random() * 30; 
       } else if (hour >= 20 && hour <= 23) {
-        intensity = 30 + Math.random() * 40; // Evening wind-down
+        intensity = 30 + Math.random() * 40; 
       } else {
-        intensity = 40 + Math.random() * 30; // Night/early morning
+        intensity = 40 + Math.random() * 30; 
       }
-      
       return {
         hour,
         emotion,
@@ -276,7 +287,6 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({ darkMode, toggleD
       };
     });
   };
-
   useEffect(() => {
     const updateWebsocketStatus = () => {
       const readyState = websocketService.getReadyState();
@@ -288,47 +298,47 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({ darkMode, toggleD
         setWebsocketStatus('disconnected');
       }
     };
-
     websocketService.initialize().then(() => {
       updateWebsocketStatus();
     }).catch(error => {
       console.error('WebSocket initialization failed:', error);
       setWebsocketStatus('disconnected');
     });
-
+    const handleMessage = (data: any) => {
+      if (data.type === 'CAMPUS_PULSE_UPDATE') {
+        setCampusPulse(data.payload);
+      }
+    };
+    websocketService.onMessage(handleMessage);
     updateWebsocketStatus();
     const interval = setInterval(updateWebsocketStatus, 5000);
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(interval);
+      websocketService.offMessage(handleMessage);
+    };
   }, []);
-
   useEffect(() => {
     initializeDetection();
   }, [initializeDetection]);
-
   useEffect(() => {
     const emotionInterval = setInterval(() => {
       const emotions = ['happy', 'sad', 'anxious', 'neutral', 'stressed', 'focused', 'relaxed'];
       const randomEmotion = emotions[Math.floor(Math.random() * emotions.length)];
-      
       const emotionData: EmotionData = {
         emotion: randomEmotion,
         intensity: Math.random() * 100,
         timestamp: Date.now(),
         confidence: Math.random() * 0.5 + 0.5
       };
-      
       addEmotionData(emotionData);
-
       if (websocketStatus === 'connected') {
         websocketService.sendMessage('EMOTION_UPDATE', emotionData);
       }
-
       if (Math.random() > 0.7) {
         const triggers = ['negative comments', 'stressful news', 'anxiety-inducing content'];
         const randomTrigger = triggers[Math.floor(Math.random() * triggers.length)];
         addContentTrigger(randomTrigger);
       }
-
       if (Math.random() > 0.5) {
         const gazePoint = {
           x: Math.random() * 100,
@@ -338,13 +348,10 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({ darkMode, toggleD
         };
         addGazeData(gazePoint);
       }
-
       setScreenTime(screenTime + 1);
     }, 15000);
-
     return () => clearInterval(emotionInterval);
   }, [addEmotionData, addContentTrigger, addGazeData, setScreenTime, screenTime, websocketStatus]);
-
   useEffect(() => {
     if (screenTime > 60 && screenTime % 30 === 0) {
       setBreakAlert(true);
@@ -352,7 +359,6 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({ darkMode, toggleD
         type: 'screen_time',
         triggeredAt: new Date().toISOString()
       });
-
       if (websocketStatus === 'connected') {
         websocketService.sendMessage('BREAK_REMINDER', {
           type: 'screen_time',
@@ -362,34 +368,37 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({ darkMode, toggleD
       }
     }
   }, [screenTime, addBreakReminder, websocketStatus]);
-
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (showHiddenMenu && hiddenMenuRef.current && !hiddenMenuRef.current.contains(event.target as Node)) {
+        setShowHiddenMenu(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showHiddenMenu]);
   const getWellnessStatus = (score: number) => {
     if (score >= 80) return { text: 'Excellent', color: 'text-green-600' };
     if (score >= 60) return { text: 'Good', color: 'text-blue-600' };
     if (score >= 40) return { text: 'Fair', color: 'text-yellow-600' };
     return { text: 'Needs Attention', color: 'text-red-600' };
   };
-
   const status = getWellnessStatus(wellnessScore);
-
   const getEmotionTrend = () => {
     const recentEmotions = emotionalTrends.slice(-20);
     const emotionCounts = recentEmotions.reduce((acc: Record<string, number>, data: EmotionData) => {
       acc[data.emotion] = (acc[data.emotion] || 0) + 1;
       return acc;
     }, {} as Record<string, number>);
-
     return Object.entries(emotionCounts).map(([emotion, count]) => ({
       emotion,
       percentage: (count as number / recentEmotions.length) * 100
     }));
   };
-
   const emotionTrends = getEmotionTrend();
-
-  // Function to filter emotion data based on time interval
   const filterEmotionData = (interval: string) => {
-    // This is a mock implementation - in a real app, you would filter actual data
     switch (interval) {
       case '30m':
         return emotionalTrends.slice(-5);
@@ -407,26 +416,17 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({ darkMode, toggleD
         return emotionalTrends;
     }
   };
-
-  // Helper function to get emotion for a specific date
   const getEmotionForDate = (date: Date) => {
-    // Find emotion data for the specific date
     const dateString = date.toDateString();
     const emotionData = emotionalTrends.find(data => {
       const dataDate = new Date(data.timestamp);
       return dataDate.toDateString() === dateString;
     });
-    
-    // If we found data for this date, return the emotion
     if (emotionData) {
       return emotionData.emotion;
     }
-    
-    // Otherwise, return null (no emotion data for this date)
     return null;
   };
-
-  // Helper function to get color for emotion
   const getEmotionColor = (emotion: string) => {
     const emotionColors: Record<string, string> = {
       'happy': 'rgba(16, 185, 129, 0.3)',
@@ -439,11 +439,8 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({ darkMode, toggleD
     };
     return emotionColors[emotion] || 'rgba(163, 163, 163, 0.3)';
   };
-
-  // Helper function to get emoji for emotion
   const getEmotionEmoji = (emotion: string | null) => {
     if (!emotion) return '';
-    
     const emotionEmojis: Record<string, string> = {
       'happy': '😊',
       'sad': '😢',
@@ -453,54 +450,43 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({ darkMode, toggleD
       'focused': '🤔',
       'relaxed': '😌'
     };
-    
     return emotionEmojis[emotion] || '😐';
   };
-
-  // Function to filter activity data based on time interval
   const filterActivityData = (interval: string) => {
-    // This is a mock implementation - in a real app, you would filter actual data
     const now = Date.now();
     let filteredReminders = [...breakReminders];
-    
     switch (interval) {
       case '30m':
-        // Filter reminders from last 30 minutes
         filteredReminders = breakReminders.filter(reminder => {
           const reminderTime = new Date(reminder.triggeredAt).getTime();
           return (now - reminderTime) <= 30 * 60 * 1000;
         });
         break;
       case '1h':
-        // Filter reminders from last hour
         filteredReminders = breakReminders.filter(reminder => {
           const reminderTime = new Date(reminder.triggeredAt).getTime();
           return (now - reminderTime) <= 60 * 60 * 1000;
         });
         break;
       case '1d':
-        // Filter reminders from last day
         filteredReminders = breakReminders.filter(reminder => {
           const reminderTime = new Date(reminder.triggeredAt).getTime();
           return (now - reminderTime) <= 24 * 60 * 60 * 1000;
         });
         break;
       case '1w':
-        // Filter reminders from last week
         filteredReminders = breakReminders.filter(reminder => {
           const reminderTime = new Date(reminder.triggeredAt).getTime();
           return (now - reminderTime) <= 7 * 24 * 60 * 60 * 1000;
         });
         break;
       case '1mo':
-        // Filter reminders from last month
         filteredReminders = breakReminders.filter(reminder => {
           const reminderTime = new Date(reminder.triggeredAt).getTime();
           return (now - reminderTime) <= 30 * 24 * 60 * 60 * 1000;
         });
         break;
       case '1y':
-        // Filter reminders from last year
         filteredReminders = breakReminders.filter(reminder => {
           const reminderTime = new Date(reminder.triggeredAt).getTime();
           return (now - reminderTime) <= 365 * 24 * 60 * 60 * 1000;
@@ -509,57 +495,41 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({ darkMode, toggleD
       default:
         filteredReminders = breakReminders;
     }
-    
-    return filteredReminders.slice(-5).reverse(); // Show latest 5
+    return filteredReminders.slice(-5).reverse(); 
   };
-
-  // Add state for activity time interval
   const [activityTimeInterval, setActivityTimeInterval] = useState('1d');
-
   const handleSignOut = () => {
-    // Add sign out logic here
     navigate('/');
   };
-  
-  // Function to generate simulated data
   const generateSimulatedData = () => {
-    // Generate emotional trends data
     const emotions = ['happy', 'sad', 'anxious', 'neutral', 'stressed', 'focused', 'relaxed'];
     const now = Date.now();
-    
-    // Add emotional trends data for the past week
     for (let i = 0; i < 100; i++) {
       const randomEmotion = emotions[Math.floor(Math.random() * emotions.length)];
       const emotionData: EmotionData = {
         emotion: randomEmotion,
         intensity: Math.random() * 100,
-        timestamp: now - Math.random() * 7 * 24 * 60 * 60 * 1000, // Random time within the last week
+        timestamp: now - Math.random() * 7 * 24 * 60 * 60 * 1000, 
         confidence: Math.random() * 0.5 + 0.5
       };
       addEmotionData(emotionData);
     }
-    
-    // Add gaze data
     for (let i = 0; i < 50; i++) {
       const gazePoint: GazeData = {
         x: Math.random() * 100,
         y: Math.random() * 100,
-        timestamp: now - Math.random() * 24 * 60 * 60 * 1000, // Random time within the last 24 hours
+        timestamp: now - Math.random() * 24 * 60 * 60 * 1000, 
         content: `simulated_content_${i}`
       };
       addGazeData(gazePoint);
     }
-    
-    // Add break reminders
     const reminderTypes = ['screen_time', 'emotion_based'];
     for (let i = 0; i < 10; i++) {
       addBreakReminder({
         type: reminderTypes[Math.floor(Math.random() * reminderTypes.length)],
-        triggeredAt: new Date(now - Math.random() * 24 * 60 * 60 * 1000).toISOString() // Random time within the last 24 hours
+        triggeredAt: new Date(now - Math.random() * 24 * 60 * 60 * 1000).toISOString() 
       });
     }
-    
-    // Add content triggers
     const triggers = [
       'negative comments',
       'stressful news',
@@ -568,63 +538,296 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({ darkMode, toggleD
       'social media comparison',
       'entertainment binge'
     ];
-    
     triggers.forEach(trigger => {
       addContentTrigger(trigger);
     });
-    
-    // Update screen time
-    setScreenTime(Math.floor(Math.random() * 120)); // Random screen time up to 120 minutes
-    
-    // Update wellness score
-    updateWellnessScore(Math.floor(Math.random() * 40) + 60); // Random score between 60-100
-    
-    // Update attention metrics
+    setScreenTime(Math.floor(Math.random() * 120)); 
+    updateWellnessScore(Math.floor(Math.random() * 40) + 60); 
     updateAttentionMetrics({
       focusSessions: Math.floor(Math.random() * 20),
-      attentionSpan: Math.floor(Math.random() * 30) + 10, // 10-40 minutes
+      attentionSpan: Math.floor(Math.random() * 30) + 10, 
       distractions: Math.floor(Math.random() * 15)
     });
   };
-
-  // Add a button to generate simulated data
+  const initializePage = () => {
+    console.log('Initializing page...');
+    generateSimulatedData();
+  };
   const handleGenerateSimulatedData = () => {
     generateSimulatedData();
   };
-
+  useEffect(() => {
+    const scoreCircle = document.querySelector('.score-circle');
+    if (scoreCircle) {
+      const score = wellnessScore;
+      let color1, color2, percentage;
+      if (score <= 20) {
+        color1 = '#FF6B6B'; 
+        color2 = '#FF8E53'; 
+        percentage = score * 5; 
+      } else if (score <= 40) {
+        color1 = '#FF8E53'; 
+        color2 = '#FFD166'; 
+        percentage = (score - 20) * 5; 
+      } else if (score <= 60) {
+        color1 = '#FFD166'; 
+        color2 = '#06D6A0'; 
+        percentage = (score - 40) * 5; 
+      } else if (score <= 80) {
+        color1 = '#06D6A0'; 
+        color2 = '#118AB2'; 
+        percentage = (score - 60) * 5; 
+      } else {
+        color1 = '#118AB2'; 
+        color2 = '#073B4C'; 
+        percentage = (score - 80) * 5; 
+      }
+      const gradient = `conic-gradient(${color1} ${100 - percentage}%, ${color2} ${percentage}%)`;
+      (scoreCircle as HTMLElement).style.background = gradient;
+    }
+  }, [wellnessScore]);
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (hiddenMenuRef.current && !(hiddenMenuRef.current as HTMLElement).contains(event.target as Node)) {
+        if (showHiddenMenu) {
+          const menuToggleButton = document.querySelector('.menu-toggle-button');
+          if (!menuToggleButton || !menuToggleButton.contains(event.target as Node)) {
+            setShowHiddenMenu(false);
+          }
+        }
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showHiddenMenu]);
   return (
     <div className="dashboard">
-      {/* Dashboard Header */}
-      <header className="dashboard-header">
-        <div className="header-left">
-          <h1>🧠 ZENITH Wellness Dashboard</h1>
-          <button 
-            className="btn btn-secondary mood-report-btn"
-            onClick={() => setShowEmotionHistory(true)}
-          >
-            📊 View Mood Report
-          </button>
+      <button 
+        className="developer-mode-toggle"
+        onClick={() => setShowDeveloperMode(!showDeveloperMode)}
+        style={{
+          position: 'fixed',
+          bottom: '20px',
+          left: '20px',
+          width: '40px',
+          height: '40px',
+          borderRadius: '50%',
+          background: 'rgba(0, 0, 0, 0.3)',
+          color: 'white',
+          border: 'none',
+          cursor: 'pointer',
+          zIndex: 1000,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontSize: '20px',
+          opacity: 0.5,
+          transition: 'opacity 0.3s ease'
+        }}
+        onMouseEnter={(e) => e.currentTarget.style.opacity = '1'}
+        onMouseLeave={(e) => e.currentTarget.style.opacity = '0.5'}
+        title="Developer Mode"
+      >
+        ⚙️
+      </button>
+      {showDeveloperMode && (
+        <div className="developer-mode-panel">
+          <div className="developer-mode-header">
+            <h3>Developer Mode</h3>
+            <button 
+              onClick={() => setShowDeveloperMode(false)}
+              className="close-btn"
+            >
+              ×
+            </button>
+          </div>
+          <div className="developer-mode-content">
+            <div className="developer-section">
+              <h4>Data Feeds</h4>
+              <div className="data-feed-info">
+                <p>WebSocket Status: {websocketStatus === 'connected' ? '🟢 Connected' : websocketStatus === 'connecting' ? '🟡 Connecting' : '🔴 Disconnected'}</p>
+                <p>Webcam: {hasCamera ? '🟢 Available' : '🔴 Unavailable'}</p>
+                <p>Emotion Detection: {isDetecting ? '🟢 Running' : '🔴 Stopped'}</p>
+              </div>
+            </div>
+            <div className="developer-section">
+              <h4>Actions</h4>
+              <button 
+                className="btn btn-primary"
+                onClick={handleGenerateSimulatedData}
+                style={{marginRight: '10px'}}
+              >
+                Generate Simulated Data
+              </button>
+              <button 
+                className="btn btn-secondary"
+                onClick={initializePage}
+              >
+                Initialize Page
+              </button>
+              <div style={{ marginTop: '15px' }}>
+                <h4>Quick Access Features</h4>
+                <button 
+                  className="btn btn-primary"
+                  onClick={() => setShowWellnessPulse(true)}
+                  style={{marginRight: '10px', marginBottom: '10px'}}
+                >
+                  Daily Wellness Pulse
+                </button>
+                <button 
+                  className="btn btn-primary"
+                  onClick={() => setBreakAlert(true)}
+                >
+                  Nudge Alert
+                </button>
+              </div>
+            </div>
+            <div className="developer-section">
+              <h4>Performance Metrics</h4>
+              {performanceMetrics && (
+                <div className="metrics-info">
+                  <p>FPS: {performanceMetrics.fps}</p>
+                  <p>Avg Detection Time: {performanceMetrics.averageDetectionTime}ms</p>
+                  <p>Detection Frequency: {performanceMetrics.detectionFrequency}ms</p>
+                  <p>Accuracy: {performanceMetrics.accuracy}%</p>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
-        <div className="header-right">
-          {/* Add Dark Mode Toggle */}
+      )}
+      <header className="sticky-header">
+        <div className="header-left">
           <button 
-            className="btn btn-secondary dark-mode-toggle"
-            onClick={() => toggleDarkMode && toggleDarkMode()}
-            title={darkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
+            className="menu-toggle-button"
+            onClick={() => {
+              if (showHiddenMenu) {
+                setShowHiddenMenu(false);
+              } else {
+                setShowWellnessPulse(false);
+                setBreakAlert(false);
+                setShowHiddenMenu(true);
+              }
+            }}
+            title="Toggle Menu"
           >
-            {darkMode ? "☀️" : "🌙"}
+            ☰
           </button>
-          
+          <div 
+            className="logo" 
+            onClick={() => {
+              if (showEmotionHistory) {
+                setShowEmotionHistory(false);
+              }
+            }}
+            style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '10px' }}
+          >
+            <img 
+              src="/BLUE-64px.png" 
+              alt="ZENITH Logo" 
+              style={{ width: '64px', height: '64px' }} 
+            />
+            <span>ZENITH</span>
+          </div>
+        </div>
+        <div className="wellness-score">
+          <div className="score-circle" data-score={wellnessScore.toString()}>
+            <span>{wellnessScore}</span>
+          </div>
+          <div className="trend">{trendData.change > 0 ? '↑' : '↓'} {Math.abs(trendData.change)}% from {trendData.period}</div>
+        </div>
+        <div className="user-menu">
+          <span>Cira C.</span>
           <button 
-            className="btn btn-primary signout-btn"
+            className="btn-logout"
             onClick={handleSignOut}
           >
-            🔒 Sign Out
+            Logout
           </button>
         </div>
       </header>
-      
-      {/* Break Alert */}
+      <div 
+        ref={hiddenMenuRef}
+        className={`hidden-dashboard-menu ${showHiddenMenu ? 'open' : ''}`}
+        style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}
+      >
+        <button 
+          className="menu-item"
+          onClick={() => {
+            setShowEmotionHistory(!showEmotionHistory);
+            setShowHiddenMenu(false);
+          }}
+          style={{ marginBottom: '15px' }}
+        >
+          {showEmotionHistory ? 'Close Mood Report' : 'View Mood Report'}
+        </button>
+        <button 
+          className="menu-item"
+          onClick={() => {
+            console.log('Focus Flow triggered from menu');
+            setShowHiddenMenu(false);
+            window.location.href = '/focus-flow';
+          }}
+          style={{ marginBottom: '15px' }}
+        >
+          Start Focus Flow
+        </button>
+        <button 
+          className="menu-item"
+          onClick={() => {
+            console.log('Digital Sunset triggered from menu');
+            setShowHiddenMenu(false);
+            window.location.href = '/digital-sunset';
+          }}
+          style={{ marginBottom: '15px' }}
+        >
+          Set Digital Sunset
+        </button>
+        <button 
+          className="menu-item"
+          onClick={() => {
+            console.log('Export PDF Report triggered from menu');
+            setShowHiddenMenu(false);
+            window.location.href = '/export-report';
+          }}
+          style={{ marginBottom: '15px' }}
+        >
+          Export PDF Report
+        </button>
+        <button 
+          className="menu-item"
+          onClick={() => {
+            handleSignOut();
+            setShowHiddenMenu(false);
+          }}
+          style={{ marginBottom: '15px' }}
+        >
+          Settings
+        </button>
+        {toggleDarkMode && (
+          <button 
+            className="dark-mode-toggle menu-item"
+            onClick={() => {
+              toggleDarkMode();
+              setShowHiddenMenu(false);
+            }}
+            title="Toggle Dark Mode"
+            style={{ marginTop: 'auto' }}
+          >
+            {darkMode ? '☀️' : '🌙'}
+          </button>
+        )}
+      </div>
+      <div className="campus-pulse-banner">
+        <span className="pulse-icon">📍</span>
+        <div className="pulse-text-container">
+          <span className="pulse-text">{campusPulse.campus} Campus Pulse: {campusPulse.message}</span>
+        </div>
+      </div>
+      <CampusResourceFinder />
+      <AIWellnessCoach />
       {breakAlert && (
         <div className="break-alert-overlay">
           <div className="break-alert">
@@ -641,789 +844,80 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({ darkMode, toggleD
           </div>
         </div>
       )}
-
-      {/* Main Content */}
-      <div className="dashboard-content">
-        <div className="main-content">
-          {/* Weekly Wellness Challenge */}
-          <div className="wellness-challenge">
-            <div className="challenge-header">
-              <h3>Weekly Wellness Challenge</h3>
-              <span className="challenge-badge">{currentChallenge.badge}</span>
-            </div>
-            <div className="challenge-content">
-              <h4>{currentChallenge.title}</h4>
-              <p>{currentChallenge.description}</p>
-              <div className="challenge-progress">
-                <div className="progress-bar">
-                  <div 
-                    className="progress-fill" 
-                    style={{ width: `${currentChallenge.progress}%` }}
-                  ></div>
-                </div>
-                <div className="progress-text">{currentChallenge.progress}% complete</div>
-              </div>
-              <button className="btn btn-primary challenge-action">
-                Share on IG Story
+      <main>
+        <DailyWellnessPulse 
+          isVisible={showWellnessPulse}
+          onClose={() => setShowWellnessPulse(false)}
+          forceShow={true} 
+        />
+        {showEmotionHistory && (
+          <section className="emotion-history-chart">
+            <div className="chart-header">
+              <h3>📊 Mood Report</h3>
+              <button 
+                className="close-chart-btn"
+                onClick={() => setShowEmotionHistory(false)}
+              >
+                ×
               </button>
             </div>
-          </div>
-          
-          {/* Wellness Metrics */}
-          <div className="stats-grid">
-            <div className="stat-card">
-              <div className="stat-icon">🧠</div>
-              <div className="stat-content">
-                <h3>Wellness Score</h3>
-                <div className={`stat-value ${status.color}`}>
-                  {wellnessScore}%
-                </div>
-                <p className="stat-description">{status.text}</p>
-              </div>
+            <div className="emotion-history-content">
+              <EmotionCalendar data={emotionalTrends} />
+              <EmotionChart data={emotionalTrends} />
             </div>
-
-            <div className="stat-card">
-              <div className="stat-icon">⏱️</div>
-              <div className="stat-content">
-                <h3>Screen Time</h3>
-                <div className="stat-value">{screenTime}m</div>
-                <p className="stat-description">Today's usage</p>
-              </div>
+          </section>
+        )}
+        {!showEmotionHistory && (
+          <>
+            <div className="main-grid">
+              <section className="emotion-timeline">
+                <h3>📊 Emotion Timeline (Today)</h3>
+                <EmotionTimelineReplay />
+                <button className="btn-replay">▶ Replay My Day</button>
+              </section>
+              <section className="trigger-radar">
+                <h3>🎯 Trigger Radar (Live in HK)</h3>
+                <TriggerRadar />
+              </section>
+              <section className="platform-breakdown">
+                <h3>📱 Platform Usage</h3>
+                <div className="breakdown-grid">
+                  <div className="card">
+                    <h4>Today's Breakdown</h4>
+                    <ul>
+                      <li>X (Twitter): 1h 42m</li>
+                      <li>Instagram: 1h 12m</li>
+                      <li>Reddit: 38m</li>
+                    </ul>
+                  </div>
+                </div>
+              </section>
+              <section className="top-triggers">
+                <h3>🔥 Top Triggers</h3>
+                <div className="word-cloud">
+                  <span style={{fontSize: '32px'}}>FYP</span>
+                  <span style={{fontSize: '28px'}}>exam</span>
+                  <span style={{fontSize: '24px'}}>ghosted</span>
+                </div>
+              </section>
+              <section className="community">
+                <h3>🤝 Join a Circle</h3>
+                <CommunityPulse />
+              </section>
+              <section className="safe-scroll large">
+                <h3>🛡️ Safe Scroll Feed</h3>
+                <SafeScrollFeed />
+              </section>
             </div>
-
-            <div className="stat-card">
-              <div className="stat-icon">😊</div>
-              <div className="stat-content">
-                <h3>Current Emotion</h3>
-                <div className="stat-value">{currentEmotion}</div>
-                <p className="stat-description">
-                  {isDetecting ? 'Live Detection' : 'Simulated Data'}
-                </p>
-              </div>
-            </div>
-
-            <div className="stat-card">
-              <div className="stat-icon">⚠️</div>
-              <div className="stat-content">
-                <h3>Content Triggers</h3>
-                <div className="stat-value">{contentTriggers.length}</div>
-                <p className="stat-description">Potential stressors</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Emotion History */}
-          {showEmotionHistory && (
-            <div className="card">
-              <h3>Emotion History</h3>
-              <div className="time-selector">
-                <button 
-                  className="time-btn"
-                  onClick={() => setTimeInterval('30m')}
-                  style={{
-                    background: timeInterval === '30m' ? 'linear-gradient(135deg, #1667c9, #1e40af)' : 'white',
-                    color: timeInterval === '30m' ? 'white' : '#1e293b',
-                    border: '1px solid #e2e8f0',
-                    padding: '8px 16px',
-                    borderRadius: '8px',
-                    cursor: 'pointer',
-                    fontWeight: '600',
-                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                    margin: '0 5px'
-                  }}
-                >
-                  30m
-                </button>
-                <button 
-                  className="time-btn"
-                  onClick={() => setTimeInterval('1h')}
-                  style={{
-                    background: timeInterval === '1h' ? 'linear-gradient(135deg, #1667c9, #1e40af)' : 'white',
-                    color: timeInterval === '1h' ? 'white' : '#1e293b',
-                    border: '1px solid #e2e8f0',
-                    padding: '8px 16px',
-                    borderRadius: '8px',
-                    cursor: 'pointer',
-                    fontWeight: '600',
-                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                    margin: '0 5px'
-                  }}
-                >
-                  1h
-                </button>
-                <button 
-                  className="time-btn"
-                  onClick={() => setTimeInterval('1d')}
-                  style={{
-                    background: timeInterval === '1d' ? 'linear-gradient(135deg, #1667c9, #1e40af)' : 'white',
-                    color: timeInterval === '1d' ? 'white' : '#1e293b',
-                    border: '1px solid #e2e8f0',
-                    padding: '8px 16px',
-                    borderRadius: '8px',
-                    cursor: 'pointer',
-                    fontWeight: '600',
-                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                    margin: '0 5px'
-                  }}
-                >
-                  Day
-                </button>
-                <button 
-                  className="time-btn"
-                  onClick={() => setTimeInterval('1w')}
-                  style={{
-                    background: timeInterval === '1w' ? 'linear-gradient(135deg, #1667c9, #1e40af)' : 'white',
-                    color: timeInterval === '1w' ? 'white' : '#1e293b',
-                    border: '1px solid #e2e8f0',
-                    padding: '8px 16px',
-                    borderRadius: '8px',
-                    cursor: 'pointer',
-                    fontWeight: '600',
-                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                    margin: '0 5px'
-                  }}
-                >
-                  Week
-                </button>
-                <button 
-                  className="time-btn"
-                  onClick={() => setTimeInterval('1mo')}
-                  style={{
-                    background: timeInterval === '1mo' ? 'linear-gradient(135deg, #1667c9, #1e40af)' : 'white',
-                    color: timeInterval === '1mo' ? 'white' : '#1e293b',
-                    border: '1px solid #e2e8f0',
-                    padding: '8px 16px',
-                    borderRadius: '8px',
-                    cursor: 'pointer',
-                    fontWeight: '600',
-                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                    margin: '0 5px'
-                  }}
-                >
-                  Month
-                </button>
-                <button 
-                  className="time-btn"
-                  onClick={() => setTimeInterval('1y')}
-                  style={{
-                    background: timeInterval === '1y' ? 'linear-gradient(135deg, #1667c9, #1e40af)' : 'white',
-                    color: timeInterval === '1y' ? 'white' : '#1e293b',
-                    border: '1px solid #e2e8f0',
-                    padding: '8px 16px',
-                    borderRadius: '8px',
-                    cursor: 'pointer',
-                    fontWeight: '600',
-                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                    margin: '0 5px'
-                  }}
-                >
-                  Year
-                </button>
-              </div>
-              <div className="emotion-chart-container">
-                <EmotionChart data={filterEmotionData(timeInterval)} />
-              </div>
-              <div className="emotion-trends">
-                <h3 style={{
-                  fontSize: '1.5rem',
-                  fontWeight: '700',
-                  color: '#1e293b',
-                  marginBottom: '20px',
-                  textAlign: 'center',
-                  paddingBottom: '15px',
-                  borderBottom: '2px solid #e2e8f0'
-                }}>
-                  📊 Emotion Distribution Overview
-                </h3>
-                
-                {/* Summary Stats */}
-                <div style={{
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
-                  gap: '15px',
-                  marginBottom: '25px'
-                }}>
-                  <div style={{
-                    background: 'linear-gradient(135deg, #1667c9, #1e40af)',
-                    color: 'white',
-                    padding: '15px',
-                    borderRadius: '10px',
-                    textAlign: 'center',
-                    boxShadow: '0 4px 6px rgba(22, 103, 201, 0.2)'
-                  }}>
-                    <div style={{ fontSize: '1.8rem', fontWeight: '700' }}>{emotionTrends.length}</div>
-                    <div style={{ fontSize: '0.9rem', opacity: '0.9' }}>Emotions</div>
-                  </div>
-                  
-                  <div style={{
-                    background: 'linear-gradient(135deg, #10b981, #059669)',
-                    color: 'white',
-                    padding: '15px',
-                    borderRadius: '10px',
-                    textAlign: 'center',
-                    boxShadow: '0 4px 6px rgba(16, 185, 129, 0.2)'
-                  }}>
-                    <div style={{ fontSize: '1.8rem', fontWeight: '700' }}>
-                      {emotionTrends.length > 0 ? 
-                        emotionTrends.reduce((max, trend) => trend.percentage > max.percentage ? trend : max, emotionTrends[0]).emotion :
-                        'N/A'}
-                    </div>
-                    <div style={{ fontSize: '0.9rem', opacity: '0.9' }}>Dominant</div>
-                  </div>
-                  
-                  <div style={{
-                    background: 'linear-gradient(135deg, #8b5cf6, #7c3aed)',
-                    color: 'white',
-                    padding: '15px',
-                    borderRadius: '10px',
-                    textAlign: 'center',
-                    boxShadow: '0 4px 6px rgba(139, 92, 246, 0.2)'
-                  }}>
-                    <div style={{ fontSize: '1.8rem', fontWeight: '700' }}>
-                      {emotionTrends.length > 0 ? 
-                        (emotionTrends.reduce((sum, trend) => sum + trend.percentage, 0) / emotionTrends.length).toFixed(0) + '%' :
-                        '0%'}
-                    </div>
-                    <div style={{ fontSize: '0.9rem', opacity: '0.9' }}>Average</div>
-                  </div>
-                </div>
-                
-                {/* Emotion Distribution Bars */}
-                <div className="trend-list">
-                  {emotionTrends.map((trend, index) => {
-                    // Get emotion color
-                    const emotionColors: Record<string, string> = {
-                      'happy': '#10b981',
-                      'sad': '#3b82f6',
-                      'anxious': '#f59e0b',
-                      'neutral': '#64748b',
-                      'stressed': '#ef4444',
-                      'focused': '#8b5cf6',
-                      'relaxed': '#06b6d4'
-                    };
-                    
-                    const color = emotionColors[trend.emotion] || '#64748b';
-                    
-                    return (
-                      <div 
-                        key={index} 
-                        className="trend-item"
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '15px',
-                          padding: '12px 15px',
-                          background: 'white',
-                          border: '1px solid #e2e8f0',
-                          borderRadius: '8px',
-                          transition: 'none'
-                        }}
-                      >
-                        {/* Emotion Name */}
-                        <div style={{
-                          fontWeight: '500',
-                          color: '#1e293b',
-                          minWidth: '80px',
-                          textTransform: 'capitalize',
-                          fontSize: '0.95rem'
-                        }}>
-                          {trend.emotion}
-                        </div>
-                        
-                        {/* Progress Bar Container */}
-                        <div style={{
-                          flex: 1,
-                          height: '8px',
-                          background: '#e2e8f0',
-                          borderRadius: '4px',
-                          overflow: 'hidden'
-                        }}>
-                          <div 
-                            className="trend-fill"
-                            style={{
-                              height: '100%',
-                              borderRadius: '4px',
-                              background: color,
-                              width: `${trend.percentage}%`,
-                              transition: 'none'
-                            }}
-                          />
-                        </div>
-                        
-                        {/* Percentage */}
-                        <div style={{
-                          fontWeight: '600',
-                          color: color,
-                          minWidth: '45px',
-                          textAlign: 'right',
-                          fontSize: '0.9rem'
-                        }}>
-                          {trend.percentage.toFixed(0)}%
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-                
-                {/* Empty State */}
-                {emotionTrends.length === 0 && (
-                  <div style={{
-                    textAlign: 'center',
-                    padding: '30px 20px',
-                    color: '#64748b'
-                  }}>
-                    <div style={{ fontSize: '2.5rem', marginBottom: '10px' }}>📊</div>
-                    <h4 style={{ 
-                      fontSize: '1.1rem', 
-                      fontWeight: '600', 
-                      marginBottom: '8px',
-                      color: '#1e293b'
-                    }}>
-                      No Emotion Data Yet
-                    </h4>
-                    <p style={{ 
-                      fontSize: '0.9rem',
-                      marginBottom: '0'
-                    }}>
-                      Start using the wellness tracker to see your emotion distribution
-                    </p>
-                  </div>
-                )}
-              </div>
-
-              {/* Calendar View */}
-              <div className="calendar-view">
-                <h4>Emotion Calendar</h4>
-                <div className="calendar-header">
-                  <div className="calendar-month-year-selector">
-                    <select 
-                      value={calendarMonth}
-                      onChange={(e) => setCalendarMonth(parseInt(e.target.value))}
-                      className="calendar-selector"
-                    >
-                      {Array.from({ length: 12 }, (_, i) => (
-                        <option key={i} value={i}>
-                          {new Date(2023, i).toLocaleString('default', { month: 'long' })}
-                        </option>
-                      ))}
-                    </select>
-                    <select 
-                      value={calendarYear}
-                      onChange={(e) => setCalendarYear(parseInt(e.target.value))}
-                      className="calendar-selector"
-                    >
-                      {Array.from({ length: 5 }, (_, i) => (
-                        <option key={i} value={2021 + i}>
-                          {2021 + i}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div style={{ fontWeight: '600', fontSize: '1.1rem' }}>
-                    {new Date(calendarYear, calendarMonth).toLocaleString('default', { month: 'long', year: 'numeric' })}
-                  </div>
-                  <div>
-                    <button 
-                      className="calendar-nav"
-                      onClick={() => {
-                        if (calendarMonth === 0) {
-                          setCalendarMonth(11);
-                          setCalendarYear(prev => prev - 1);
-                        } else {
-                          setCalendarMonth(prev => prev - 1);
-                        }
-                      }}
-                      style={{
-                        background: 'white',
-                        border: '1px solid #e2e8f0',
-                        borderRadius: '8px',
-                        padding: '8px 16px',
-                        cursor: 'pointer',
-                        fontWeight: '600'
-                      }}
-                    >
-                      &lt; Prev
-                    </button>
-                    <button 
-                      className="calendar-nav"
-                      onClick={() => {
-                        if (calendarMonth === 11) {
-                          setCalendarMonth(0);
-                          setCalendarYear(prev => prev + 1);
-                        } else {
-                          setCalendarMonth(prev => prev + 1);
-                        }
-                      }}
-                      style={{
-                        background: 'white',
-                        border: '1px solid #e2e8f0',
-                        borderRadius: '8px',
-                        padding: '8px 16px',
-                        cursor: 'pointer',
-                        fontWeight: '600',
-                        marginLeft: '10px'
-                      }}
-                    >
-                      Next &gt;
-                    </button>
-                  </div>
-                </div>
-                
-                {/* Hourly View */}
-                {showHourlyView && selectedDate && (
-                  <div className="hourly-view">
-                    <div className="hourly-view-header">
-                      <h5>
-                        Emotions for {selectedDate.toLocaleDateString('en-US', { 
-                          weekday: 'long', 
-                          year: 'numeric', 
-                          month: 'long', 
-                          day: 'numeric' 
-                        })}
-                      </h5>
-                      <button 
-                        className="btn btn-secondary"
-                        onClick={() => setShowHourlyView(false)}
-                        style={{
-                          padding: '6px 12px',
-                          fontSize: '0.9rem'
-                        }}
-                      >
-                        Back to Calendar
-                      </button>
-                    </div>
-                    <div className="hourly-emotion-chart">
-                      {getHourlyEmotionData(selectedDate).map((hourData) => (
-                        <div 
-                          key={hourData.hour}
-                          className="hourly-bar"
-                          style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            padding: '8px',
-                            borderBottom: '1px solid #e2e8f0'
-                          }}
-                        >
-                          <div style={{ width: '40px', fontWeight: '600' }}>
-                            {hourData.hour.toString().padStart(2, '0')}:00
-                          </div>
-                          <div 
-                            className="hourly-emotion-indicator"
-                            style={{
-                              width: '20px',
-                              height: '20px',
-                              borderRadius: '50%',
-                              backgroundColor: getEmotionColor(hourData.emotion),
-                              margin: '0 10px'
-                            }}
-                            title={hourData.emotion}
-                          />
-                          <div style={{ flex: 1 }}>
-                            <div 
-                              style={{
-                                height: '8px',
-                                backgroundColor: '#e2e8f0',
-                                borderRadius: '4px',
-                                overflow: 'hidden'
-                              }}
-                            >
-                              <div 
-                                style={{
-                                  height: '100%',
-                                  width: `${hourData.intensity}%`,
-                                  backgroundColor: getEmotionColor(hourData.emotion),
-                                  borderRadius: '4px'
-                                }}
-                              />
-                            </div>
-                          </div>
-                          <div style={{ width: '60px', textAlign: 'right', fontSize: '0.9rem' }}>
-                            {hourData.intensity.toFixed(0)}%
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-                
-                {/* Calendar Grid */}
-                {!showHourlyView && (
-                  <div className="calendar-grid">
-                    {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
-                      <div key={day} className="calendar-day-header">
-                        {day}
-                      </div>
-                    ))}
-                    {Array.from({ length: 35 }, (_, i) => {
-                      const day = i - new Date(calendarYear, calendarMonth, 1).getDay() + 1;
-                      const isCurrentMonth = day > 0 && day <= new Date(calendarYear, calendarMonth + 1, 0).getDate();
-                      const date = isCurrentMonth ? new Date(calendarYear, calendarMonth, day) : null;
-                      const emotion = date ? getEmotionForDate(date) : null;
-                      const emotionClass = emotion ? `emotion-${emotion}` : '';
-                      
-                      return (
-                        <div 
-                          key={i}
-                          className={`calendar-day ${emotion ? 'has-emotion ' + emotionClass : ''} ${date && selectedDate && date.toDateString() === selectedDate.toDateString() ? 'selected' : ''} ${isCurrentMonth ? '' : 'other-month'}`}
-                          onClick={() => handleDayClick(date)}
-                          title={emotion ? `${emotion} - ${date?.toLocaleDateString()}` : ''}
-                        >
-                          <div className="calendar-day-content">
-                            {isCurrentMonth ? (
-                              <>
-                                <div className="calendar-day-number">{day}</div>
-                                {emotion && (
-                                  <div className="calendar-day-emoji" title={emotion}>
-                                    {getEmotionEmoji(emotion)}
-                                  </div>
-                                )}
-                              </>
-                            ) : (
-                              ''
-                            )}
-                          </div>
-                        </div>
-                      );
-
-                    })}
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
-
-          {/* Add Trigger Word Cloud here */}
-          <TriggerWordCloud />
-          
-          {/* Two Column Layout */}
-          <div className="dashboard-columns">
-            <div className="main-column">
-              {/* Recent Activity */}
-              <div className="card">
-                <h3>Recent Activity</h3>
-                <div className="time-selector">
-                  <button 
-                    className="time-btn"
-                    onClick={() => setActivityTimeInterval('30m')}
-                    style={{
-                      background: activityTimeInterval === '30m' ? 'linear-gradient(135deg, #1667c9, #1e40af)' : 'white',
-                      color: activityTimeInterval === '30m' ? 'white' : '#1e293b',
-                      border: '1px solid #e2e8f0',
-                      padding: '8px 16px',
-                      borderRadius: '8px',
-                      cursor: 'pointer',
-                      fontWeight: '600',
-                      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                      margin: '0 5px'
-                    }}
-                  >
-                    30m
-                  </button>
-                  <button 
-                    className="time-btn"
-                    onClick={() => setActivityTimeInterval('1h')}
-                    style={{
-                      background: activityTimeInterval === '1h' ? 'linear-gradient(135deg, #1667c9, #1e40af)' : 'white',
-                      color: activityTimeInterval === '1h' ? 'white' : '#1e293b',
-                      border: '1px solid #e2e8f0',
-                      padding: '8px 16px',
-                      borderRadius: '8px',
-                      cursor: 'pointer',
-                      fontWeight: '600',
-                      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                      margin: '0 5px'
-                    }}
-                  >
-                    1h
-                  </button>
-                  <button 
-                    className="time-btn"
-                    onClick={() => setActivityTimeInterval('1d')}
-                    style={{
-                      background: activityTimeInterval === '1d' ? 'linear-gradient(135deg, #1667c9, #1e40af)' : 'white',
-                      color: activityTimeInterval === '1d' ? 'white' : '#1e293b',
-                      border: '1px solid #e2e8f0',
-                      padding: '8px 16px',
-                      borderRadius: '8px',
-                      cursor: 'pointer',
-                      fontWeight: '600',
-                      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                      margin: '0 5px'
-                    }}
-                  >
-                    Day
-                  </button>
-                  <button 
-                    className="time-btn"
-                    onClick={() => setActivityTimeInterval('1w')}
-                    style={{
-                      background: activityTimeInterval === '1w' ? 'linear-gradient(135deg, #1667c9, #1e40af)' : 'white',
-                      color: activityTimeInterval === '1w' ? 'white' : '#1e293b',
-                      border: '1px solid #e2e8f0',
-                      padding: '8px 16px',
-                      borderRadius: '8px',
-                      cursor: 'pointer',
-                      fontWeight: '600',
-                      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                      margin: '0 5px'
-                    }}
-                  >
-                    Week
-                  </button>
-                  <button 
-                    className="time-btn"
-                    onClick={() => setActivityTimeInterval('1mo')}
-                    style={{
-                      background: activityTimeInterval === '1mo' ? 'linear-gradient(135deg, #1667c9, #1e40af)' : 'white',
-                      color: activityTimeInterval === '1mo' ? 'white' : '#1e293b',
-                      border: '1px solid #e2e8f0',
-                      padding: '8px 16px',
-                      borderRadius: '8px',
-                      cursor: 'pointer',
-                      fontWeight: '600',
-                      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                      margin: '0 5px'
-                    }}
-                  >
-                    Month
-                  </button>
-                  <button 
-                    className="time-btn"
-                    onClick={() => setActivityTimeInterval('1y')}
-                    style={{
-                      background: activityTimeInterval === '1y' ? 'linear-gradient(135deg, #1667c9, #1e40af)' : 'white',
-                      color: activityTimeInterval === '1y' ? 'white' : '#1e293b',
-                      border: '1px solid #e2e8f0',
-                      padding: '8px 16px',
-                      borderRadius: '8px',
-                      cursor: 'pointer',
-                      fontWeight: '600',
-                      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                      margin: '0 5px'
-                    }}
-                  >
-                    Year
-                  </button>
-                </div>
-                <div className="activity-list">
-                  {filterActivityData(activityTimeInterval).map((reminder: any, index: number) => (
-                    <div key={index} className="activity-item fade-in">
-                      <div className="activity-icon">
-                        {reminder.type === 'screen_time' ? '⏰' : '😊'}
-                      </div>
-                      <div className="activity-content">
-                        <p className="activity-text">
-                          {reminder.type === 'screen_time' ? 'Screen time break reminder' : 'Emotion-based break reminder'}
-                        </p>
-                        <span className="activity-time">
-                          {new Date(reminder.triggeredAt).toLocaleTimeString()}
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                  {filterActivityData(activityTimeInterval).length === 0 && (
-                    <div className="no-activity">
-                      <p>No recent activity detected</p>
-                      <small>Activity will appear here as you use the system</small>
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* Developer Mode */}
-              {showDeveloperMode && (
-                <div className="card">
-                  <h3>Developer Mode</h3>
-                  <div className="developer-content">
-                    <div className="system-info">
-                      <h4>System Information</h4>
-                      <div className="info-grid">
-                        <div className="info-item">
-                          <strong>Emotion Detection:</strong> {isInitialized ? '✅ Initialized' : '❌ Not Initialized'}
-                        </div>
-                        <div className="info-item">
-                          <strong>Camera Status:</strong> {cameraStatus}
-                        </div>
-                        <div className="info-item">
-                          <strong>WebSocket:</strong> {websocketStatus}
-                        </div>
-                        <div className="info-item">
-                          <strong>Detection Active:</strong> {isDetecting ? '✅ Yes' : '❌ No'}
-                        </div>
-                      </div>
-                    </div>
-                    <div className="developer-actions">
-                      <button onClick={initializeDetection} className="btn btn-secondary">
-                        🔄 Reinitialize
-                      </button>
-                      <button onClick={() => console.log('Status logged')} className="btn btn-secondary">
-                        📋 Log Status
-                      </button>
-                      <button onClick={handleGenerateSimulatedData} className="btn btn-secondary">
-                        🎲 Generate Sample Data
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            <div className="sidebar-column">
-              {/* Quick Actions */}
-              <div className="card">
-                <h3>Quick Actions</h3>
-                <div className="quick-actions">
-                  <button className="btn btn-secondary">
-                    🎯 Take Wellness Break
-                  </button>
-                  <button className="btn btn-secondary">
-                    📊 Generate Report
-                  </button>
-                  <button className="btn btn-secondary">
-                    ⚙️ Adjust Settings
-                  </button>
-                  <button className="btn btn-secondary">
-                    🎭 Calibrate Detection
-                  </button>
-                </div>
-              </div>
-
-              {/* System Status */}
-              <div className="card">
-                <h3>System Status</h3>
-                <div className="system-status">
-                  <div className="status-item">
-                    <span className="status-label">Emotion Detection</span>
-                    <span className={`status-value ${isDetecting ? 'connected' : 'disconnected'}`}>
-                      {isDetecting ? 'Active' : 'Inactive'}
-                    </span>
-                  </div>
-                  <div className="status-item">
-                    <span className="status-label">WebSocket</span>
-                    <span className={`status-value ${websocketStatus === 'connected' ? 'connected' : 'disconnected'}`}>
-                      {websocketStatus}
-                    </span>
-                  </div>
-                  <div className="status-item">
-                    <span className="status-label">Camera Access</span>
-                    <span className={`status-value ${hasCamera ? 'connected' : 'disconnected'}`}>
-                      {cameraStatus}
-                    </span>
-                  </div>
-                  <div className="status-item">
-                    <span className="status-label">Data Collection</span>
-                    <span className="status-value connected">
-                      Active
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+          </>
+        )}
+        <footer>
+          <p><strong>ZENITH</strong> | Protecting Hong Kong Gen Z</p>
+          <p>🔒 No raw data stored · On-device AI · <a href="#">Privacy Policy</a></p>
+          <p>Need help? <a href="#">Campus Resources</a></p>
+        </footer>
+      </main>
     </div>
   );
 };
-
 export default EnhancedDashboard;

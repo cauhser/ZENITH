@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-
 interface ContentItem {
   id: string;
   url: string;
@@ -9,30 +8,23 @@ interface ContentItem {
   contentSnippet?: string;
   tabId?: number;
 }
-
 const ContentList: React.FC = () => {
   const [contentItems, setContentItems] = useState<ContentItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [extensionStatus, setExtensionStatus] = useState<'checking' | 'connected' | 'disconnected'>('checking');
   const [extensionId, setExtensionId] = useState<string>('');
-
   useEffect(() => {
     initializeExtensionConnection();
-    
     const interval = setInterval(() => {
       if (extensionStatus === 'connected') {
         loadContentData();
       }
     }, 5000);
-    
     return () => clearInterval(interval);
   }, [extensionStatus]);
-
   const initializeExtensionConnection = async () => {
     setExtensionStatus('checking');
-    
     const isInstalled = await checkExtensionInstalled();
-    
     if (isInstalled) {
       setExtensionStatus('connected');
       if (chrome.runtime?.id) {
@@ -45,7 +37,6 @@ const ContentList: React.FC = () => {
       loadLocalData();
     }
   };
-
   const checkExtensionInstalled = (): Promise<boolean> => {
     return new Promise((resolve) => {
       if (typeof chrome !== 'undefined' && chrome.runtime && chrome.runtime.id) {
@@ -53,7 +44,6 @@ const ContentList: React.FC = () => {
         resolve(true);
         return;
       }
-
       if (typeof chrome !== 'undefined' && chrome.runtime) {
         chrome.runtime.sendMessage({ type: 'PING' }, (response) => {
           if (chrome.runtime.lastError) {
@@ -70,10 +60,8 @@ const ContentList: React.FC = () => {
       }
     });
   };
-
   const loadContentData = () => {
     if (extensionStatus !== 'connected') return;
-
     try {
       chrome.storage.local.get(['analytics'], (result) => {
         if (result.analytics && Array.isArray(result.analytics)) {
@@ -86,7 +74,6 @@ const ContentList: React.FC = () => {
         }
         setLoading(false);
       });
-
       chrome.runtime.sendMessage(
         { type: 'GET_ANALYTICS_DATA' },
         (response) => {
@@ -106,7 +93,6 @@ const ContentList: React.FC = () => {
       setLoading(false);
     }
   };
-
   const loadLocalData = () => {
     const stored = localStorage.getItem('zenith-content-data');
     if (stored) {
@@ -119,20 +105,16 @@ const ContentList: React.FC = () => {
       console.log('📊 Loaded', realData.length, 'content items from localStorage');
     }
   };
-
   const clearData = () => {
     setContentItems([]);
-    
     localStorage.removeItem('zenith-content-data');
     if (extensionStatus === 'connected') {
       chrome.storage.local.set({ analytics: [] });
     }
   };
-
   const testExtensionConnection = () => {
     console.log('Testing extension connection...');
     initializeExtensionConnection();
-    
     if (extensionStatus === 'connected') {
       chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         tabs.forEach(tab => {
@@ -149,11 +131,9 @@ const ContentList: React.FC = () => {
       });
     }
   };
-
   const formatTime = (timestamp: number) => {
     return new Date(timestamp).toLocaleString();
   };
-
   if (loading) {
     return (
       <div className="card">
@@ -167,7 +147,6 @@ const ContentList: React.FC = () => {
       </div>
     );
   }
-
   return (
     <div className="card">
       <div className="card-header">
@@ -181,14 +160,12 @@ const ContentList: React.FC = () => {
           </button>
         </div>
       </div>
-
       <div className="extension-status">
         <span className={`status-indicator ${extensionStatus}`}>
           {extensionStatus === 'connected' && `✅ Extension Connected (ID: ${extensionId.substring(0, 8)}...)`}
           {extensionStatus === 'disconnected' && '❌ Extension Not Detected'}
           {extensionStatus === 'checking' && '🔍 Checking Extension...'}
         </span>
-        
         {extensionStatus === 'disconnected' && (
           <div className="extension-help">
             <p><strong>To enable real-time content collection:</strong></p>
@@ -203,7 +180,6 @@ const ContentList: React.FC = () => {
                   <li><code>popup.js</code></li>
                 </ul>
               </div>
-              
               <div className="step">
                 <strong>Step 2: Load in Chrome</strong>
                 <ol>
@@ -214,13 +190,11 @@ const ContentList: React.FC = () => {
                   <li>Ensure extension shows as <strong>"Enabled"</strong></li>
                 </ol>
               </div>
-              
               <div className="step">
                 <strong>Step 3: Start Browsing</strong>
                 <p>Refresh this page and browse websites to see real-time content analysis.</p>
               </div>
             </div>
-            
             <div className="debug-info">
               <p>Debug Information:</p>
               <ul>
@@ -231,7 +205,6 @@ const ContentList: React.FC = () => {
             </div>
           </div>
         )}
-        
         {extensionStatus === 'connected' && contentItems.length === 0 && (
           <div className="empty-guide">
             <p><strong>✅ Extension is connected and ready!</strong></p>
@@ -245,7 +218,6 @@ const ContentList: React.FC = () => {
           </div>
         )}
       </div>
-
       <div className="content-list">
         {contentItems.length === 0 ? (
           <div className="empty-state">
@@ -270,7 +242,6 @@ const ContentList: React.FC = () => {
                     {formatTime(item.timestamp)}
                   </span>
                 </div>
-                
                 <a 
                   href={item.url} 
                   target="_blank" 
@@ -279,7 +250,6 @@ const ContentList: React.FC = () => {
                 >
                   {item.url}
                 </a>
-                
                 <div className="content-triggers">
                   <strong>Detected Triggers:</strong>
                   <div className="trigger-tags">
@@ -290,7 +260,6 @@ const ContentList: React.FC = () => {
                     ))}
                   </div>
                 </div>
-                
                 {item.contentSnippet && (
                   <div className="content-snippet">
                     <p>{item.contentSnippet}</p>
@@ -301,7 +270,6 @@ const ContentList: React.FC = () => {
           </div>
         )}
       </div>
-      
       <div className="card-footer">
         <small>
           {extensionStatus === 'connected' ? '🟢 Live monitoring' : '🔴 Extension required'} • 
@@ -312,5 +280,4 @@ const ContentList: React.FC = () => {
     </div>
   );
 };
-
 export default ContentList;

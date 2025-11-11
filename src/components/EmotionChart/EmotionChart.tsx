@@ -1,130 +1,1 @@
-import React, { useState, useEffect } from 'react';
-import { EmotionData } from '../../types/wellness';
-import { EMOTION_CONSTANTS } from '../../utils/constants';
-
-interface EmotionChartProps {
-  data: EmotionData[];
-}
-
-export const EmotionChart: React.FC<EmotionChartProps> = ({ data }) => {
-  // Enhanced emotion grouping with better colors
-  const emotionStats = data.reduce((acc, item) => {
-    if (!acc[item.emotion]) {
-      acc[item.emotion] = {
-        count: 0,
-        totalConfidence: 0,
-        totalIntensity: 0,
-        timestamps: [],
-        color: getEmotionColor(item.emotion),
-        icon: getEmotionIcon(item.emotion)
-      };
-    }
-    acc[item.emotion].count++;
-    acc[item.emotion].totalConfidence += item.confidence;
-    acc[item.emotion].totalIntensity += item.intensity;
-    acc[item.emotion].timestamps.push(item.timestamp);
-    return acc;
-  }, {} as Record<string, { count: number; totalConfidence: number; totalIntensity: number; timestamps: number[]; color: string; icon: string }>);
-
-  const emotionData = Object.entries(emotionStats).map(([emotion, stats]) => ({
-    emotion,
-    averageConfidence: stats.totalConfidence / stats.count,
-    averageIntensity: stats.totalIntensity / stats.count,
-    count: stats.count,
-    color: stats.color,
-    icon: stats.icon,
-    percentage: (stats.count / data.length) * 100,
-  })).sort((a, b) => b.count - a.count);
-
-  function getEmotionColor(emotion: string): string {
-    // Map emotion names to match constants if needed
-    const emotionMap: Record<string, string> = {
-      anxious: 'fearful',
-      relaxed: 'calm'
-    };
-    
-    const mappedEmotion = emotionMap[emotion] || emotion;
-    return EMOTION_CONSTANTS.EMOTION_COLORS[mappedEmotion as keyof typeof EMOTION_CONSTANTS.EMOTION_COLORS] || '#9ca3af';
-  }
-
-  function getEmotionIcon(emotion: string): string {
-    const icons: Record<string, string> = {
-      happy: '😊',
-      sad: '😢',
-      neutral: '😐',
-      anxious: '😰',
-      stressed: '😫',
-      angry: '😠',
-      surprised: '😲',
-      disgusted: '🤢',
-      focused: '🎯',
-      relaxed: '😌'
-    };
-    return icons[emotion] || '❓';
-  }
-
-  if (data.length === 0) {
-    return (
-      <div className="emotion-chart">
-        <div className="no-data">
-          <div className="no-data-icon">📊</div>
-          <p>No emotion data available yet</p>
-          <small>Emotion data will appear here as it's collected</small>
-        </div>
-      </div>
-    );
-  }
-
-  const maxCount = Math.max(...emotionData.map(item => item.count));
-
-  return (
-    <div className="emotion-chart">
-      <div className="chart-header">
-        <h4>Emotion Distribution</h4>
-        <span className="total-samples">{data.length} total samples</span>
-      </div>
-      
-      <div className="chart-bars-container">
-        <div className="chart-bars">
-          {emotionData.map((item, index) => (
-            <div key={item.emotion} className="emotion-bar">
-              <div className="emotion-info">
-                <span className="emotion-name">
-                  <span className="emotion-icon">{item.icon}</span>
-                  {item.emotion}
-                </span>
-                <span className="emotion-stats">
-                  {item.count} ({item.percentage.toFixed(1)}%)
-                </span>
-              </div>
-              <div className="bar-container">
-                <div 
-                  className="bar-fill"
-                  style={{
-                    height: `${(item.count / maxCount) * 100}%`,
-                    background: item.color,
-                  }}
-                />
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div className="chart-summary">
-        <div className="summary-item">
-          <strong>Most Common:</strong> 
-          <span className="emotion-highlight">
-            <span className="emotion-icon">{emotionData[0]?.icon}</span>
-            {emotionData[0]?.emotion || 'N/A'}
-          </span>
-        </div>
-        <div className="summary-item">
-          <strong>Total Emotions:</strong> {emotionData.length}
-        </div>
-      </div>
-    </div>
-  );
-};
-
-export default EmotionChart;
+import React, { useState, useEffect } from 'react';import { EmotionData } from '../../types/wellness';import { EMOTION_CONSTANTS } from '../../utils/constants';interface EmotionChartProps {  data: EmotionData[];}export const EmotionChart: React.FC<EmotionChartProps> = ({ data }) => {  const emotionStats = data.reduce((acc, item) => {    if (!acc[item.emotion]) {      acc[item.emotion] = {        count: 0,        totalConfidence: 0,        totalIntensity: 0,        timestamps: [],        color: getEmotionColor(item.emotion),        icon: getEmotionIcon(item.emotion)      };    }    acc[item.emotion].count++;    acc[item.emotion].totalConfidence += item.confidence;    acc[item.emotion].totalIntensity += item.intensity;    acc[item.emotion].timestamps.push(item.timestamp);    return acc;  }, {} as Record<string, { count: number; totalConfidence: number; totalIntensity: number; timestamps: number[]; color: string; icon: string }>);  const emotionData = Object.entries(emotionStats).map(([emotion, stats]) => ({    emotion,    averageConfidence: stats.totalConfidence / stats.count,    averageIntensity: stats.totalIntensity / stats.count,    count: stats.count,    color: stats.color,    icon: stats.icon,    percentage: (stats.count / data.length) * 100,  })).sort((a, b) => b.count - a.count);  function getEmotionColor(emotion: string): string {    const emotionMap: Record<string, string> = {      anxious: 'fearful',      relaxed: 'calm'    };    const mappedEmotion = emotionMap[emotion] || emotion;    return EMOTION_CONSTANTS.EMOTION_COLORS[mappedEmotion as keyof typeof EMOTION_CONSTANTS.EMOTION_COLORS] || '#9ca3af';  }  function getEmotionIcon(emotion: string): string {    const icons: Record<string, string> = {      happy: '😊',      sad: '😢',      neutral: '😐',      anxious: '😰',      stressed: '😫',      angry: '😠',      surprised: '😲',      disgusted: '🤢',      focused: '🎯',      relaxed: '😌'    };    return icons[emotion] || '❓';  }  if (data.length === 0) {    return (      <div className="emotion-chart">        <div className="no-data">          <div className="no-data-icon">📊</div>          <p>No emotion data available yet</p>          <small>Emotion data will appear here as it's collected</small>        </div>      </div>    );  }  const maxCount = Math.max(...emotionData.map(item => item.count));  return (    <div className="emotion-chart">      <div className="chart-header">        <h4>Emotion Distribution</h4>        <span className="total-samples">{data.length} total samples</span>      </div>      <div className="chart-bars-container">        <div className="chart-bars">          {emotionData.map((item, index) => (            <div key={item.emotion} className="emotion-bar">              <div className="emotion-info">                <span className="emotion-name">                  <span className="emotion-icon">{item.icon}</span>                  {item.emotion}                </span>                <span className="emotion-stats">                  {item.count} ({item.percentage.toFixed(1)}%)                </span>              </div>              <div className="bar-container">                <div                   className="bar-fill"                  style={{                    height: `${(item.count / maxCount) * 100}%`,                    background: item.color,                  }}                />              </div>            </div>          ))}        </div>      </div>      <div className="chart-summary">        <div className="summary-item">          <strong>Most Common:</strong>           <span className="emotion-highlight">            <span className="emotion-icon">{emotionData[0]?.icon}</span>            {emotionData[0]?.emotion || 'N/A'}          </span>        </div>        <div className="summary-item">          <strong>Total Emotions:</strong> {emotionData.length}        </div>      </div>    </div>  );};export default EmotionChart;

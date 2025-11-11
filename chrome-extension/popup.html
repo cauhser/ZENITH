@@ -6,64 +6,62 @@
 </head>
 <body>
   <div class="popup-container">
+    <!-- Header -->
     <div class="header">
-      <div class="logo-container">
-        <img src="icons/Zenith_Logo_V01_32_32px.png" alt="ZENITH Logo" class="logo">
+      <div class="header-top">
+        <span class="logo">🌟</span>
+        <h3>ZENITH</h3>
+        <div class="header-icons">
+          <span class="eye-icon">👁️</span>
+          <span class="settings-icon">⚙️</span>
+        </div>
       </div>
-      <h3>🧠 ZENITH</h3>
-      <p>Wellness</p>
-      <div id="statusIndicator" class="status-indicator status-connected">
-        <span class="loading"></span>
-        ...
+      <div class="live-indicator">
+        <span class="live-dot"></span>
+        <span class="live-text">LIVE</span>
       </div>
     </div>
     
-    <div class="content">
-      <div id="permissionWarning" class="permission-warning" style="display: none;">
-        <p>🔒 Enable tracking</p>
-        <button id="enableTracking" class="btn btn-success btn-full">
-          🚀 Enable
-        </button>
-      </div>
-      
-      <div class="stats-grid">
-        <div class="stat-card" id="triggersCard">
-          <div class="stat-value" id="triggersCount">0</div>
-          <div class="stat-label">Trig</div>
-        </div>
-        <div class="stat-card" id="pagesCard">
-          <div class="stat-value" id="pagesCount">0</div>
-          <div class="stat-label">Pages</div>
-        </div>
-        <div class="stat-card" id="sentimentCard">
-          <div class="stat-value" id="sentimentScore">0%</div>
-          <div class="stat-label">Pos</div>
-        </div>
-      </div>
-      
-      <div class="collection-method-selector">
-        <label>Data:</label>
-        <select id="collectionMethod" class="method-select">
-          <option value="content">Content</option>
-          <option value="both">Content+Cam</option>
-        </select>
-      </div>
-      
-      <div class="recent-activity">
-        <h4>📈 Activity</h4>
-        <div id="recentActivity" class="activity-list">
-          <div class="empty-state">No data</div>
+    <!-- Wellness Score -->
+    <div class="wellness-score">
+      <div class="score-value">😊 82%</div>
+      <div class="score-change">↑ 6% from yesterday</div>
+    </div>
+    
+    <!-- Today's Insights -->
+    <div class="insights-section">
+      <h4>📊 Today's Insights</h4>
+      <ul class="insights-list">
+        <li>1h 42m on X (Twitter)</li>
+        <li>3 toxic threads detected</li>
+        <li>Stress spike at 2:14 PM</li>
+      </ul>
+    </div>
+    
+    <!-- Recent Alert -->
+    <div class="alert-section">
+      <h4>🔔 Recent Alert</h4>
+      <div class="alert-content">
+        <p>"High negativity detected. Take a 2-min breathing break?"</p>
+        <div class="alert-buttons">
+          <button class="btn btn-primary">Done</button>
+          <button class="btn btn-secondary">Later</button>
         </div>
       </div>
-      
-      <div class="buttons-grid">
-        <button id="togglePause" class="btn btn-primary">
-          ⏸️
-        </button>
-        <button id="viewDashboard" class="btn btn-primary btn-full">
-          📊 Dashboard
-        </button>
+    </div>
+    
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+      <h4>⚡ Quick Actions</h4>
+      <div class="action-buttons">
+        <button class="btn btn-secondary">Pause Tracking</button>
+        <button class="btn btn-primary">View Dashboard</button>
       </div>
+    </div>
+    
+    <!-- Privacy Note -->
+    <div class="privacy-note">
+      🔒 Privacy: On-device processing
     </div>
   </div>
 
