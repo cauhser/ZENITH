@@ -53,9 +53,16 @@ body {
   color: var(--text-primary);
   line-height: 1.5;
   overflow-x: hidden;
+  margin: 0;
+  padding: 0;
 }
 #root {
   min-height: 100vh;
+}
+.App {
+  width: 100vw;
+  min-height: 100vh;
+  overflow-x: hidden;
 }
 .app {
   display: flex;
@@ -1202,7 +1209,7 @@ body {
     margin-bottom: 20px !important;
     page-break-inside: avoid;
   }
-  .ai-chat-button, .dark-mode-toggle, .developer-mode-toggle,
+  .ai-chat-button, .developer-mode-toggle,
   .mood-report-btn, .sign-out-button {
     display: none !important;
   }

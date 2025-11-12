@@ -31,84 +31,80 @@ const AppRoutes: React.FC = () => {
   }
 
   return React.createElement(
-    'main',
-    { className: 'main-content' },
-    React.createElement(
-      Routes,
-      null,
-      React.createElement(Route, {
-        path: '/',
-        element: React.createElement(LandingPage, null)
-      }),
-      React.createElement(Route, {
-        path: '/login',
-        element: React.createElement(Login, null)
-      }),
-      React.createElement(Route, {
-        path: '/signup',
-        element: React.createElement(Signup, null)
-      }),
-      React.createElement(Route, {
-        path: '/dashboard',
-        element: React.createElement(EnhancedDashboard, null)
-      }),
-      React.createElement(Route, {
-        path: '/wellness',
-        element: React.createElement(WellnessProfile, null)
-      }),
-      React.createElement(Route, {
-        path: '/profile',
-        element: React.createElement(WellnessProfile, null)
-      }),
-      React.createElement(Route, {
-        path: '/content-analysis',
-        element: React.createElement(ContentAnalysis, null)
-      }),
-      React.createElement(Route, {
-        path: '/content',
-        element: React.createElement(ContentAnalysis, null)
-      }),
-      React.createElement(Route, {
-        path: '/break-reminders',
-        element: React.createElement(BreakReminders, null)
-      }),
-      React.createElement(Route, {
-        path: '/breaks',
-        element: React.createElement(BreakReminders, null)
-      }),
-      React.createElement(Route, {
-        path: '/analytics',
-        element: React.createElement(RealTimeAnalytics, null)
-      }),
-      React.createElement(Route, {
-        path: '/eye-tracking',
-        element: React.createElement(EyeTracking, null)
-      }),
-      React.createElement(Route, {
-        path: '/wellness-tools',
-        element: React.createElement(WellnessTools, null)
-      }),
-      React.createElement(Route, {
-        path: '/relaxation',
-        element: React.createElement(RelaxationPage, null)
-      }),
-      React.createElement(Route, {
-        path: '/focus-flow',
-        element: React.createElement(FocusFlow, null)
-      }),
-      React.createElement(Route, {
-        path: '/digital-sunset',
-        element: React.createElement(DigitalSunsetScheduler, null)
-      }),
-      React.createElement(Route, {
-        path: '/export-report',
-        element: React.createElement(ExportWellnessReport, null)
-      }),
-      React.createElement(Route, {
-        path: '*',
-        element: React.createElement(LandingPage, null)
-      })
-    )
+    Routes,
+    null,
+    React.createElement(Route, {
+      path: '/',
+      element: React.createElement(LandingPage, null)
+    }),
+    React.createElement(Route, {
+      path: '/login',
+      element: React.createElement(Login, null)
+    }),
+    React.createElement(Route, {
+      path: '/signup',
+      element: React.createElement(Signup, null)
+    }),
+    React.createElement(Route, {
+      path: '/dashboard',
+      element: React.createElement(EnhancedDashboard, null)
+    }),
+    React.createElement(Route, {
+      path: '/wellness',
+      element: React.createElement(WellnessProfile, null)
+    }),
+    React.createElement(Route, {
+      path: '/profile',
+      element: React.createElement(WellnessProfile, null)
+    }),
+    React.createElement(Route, {
+      path: '/content-analysis',
+      element: React.createElement(ContentAnalysis, null)
+    }),
+    React.createElement(Route, {
+      path: '/content',
+      element: React.createElement(ContentAnalysis, null)
+    }),
+    React.createElement(Route, {
+      path: '/break-reminders',
+      element: React.createElement(BreakReminders, null)
+    }),
+    React.createElement(Route, {
+      path: '/breaks',
+      element: React.createElement(BreakReminders, null)
+    }),
+    React.createElement(Route, {
+      path: '/analytics',
+      element: React.createElement(RealTimeAnalytics, null)
+    }),
+    React.createElement(Route, {
+      path: '/eye-tracking',
+      element: React.createElement(EyeTracking, null)
+    }),
+    React.createElement(Route, {
+      path: '/wellness-tools',
+      element: React.createElement(WellnessTools, null)
+    }),
+    React.createElement(Route, {
+      path: '/relaxation',
+      element: React.createElement(RelaxationPage, null)
+    }),
+    React.createElement(Route, {
+      path: '/focus-flow',
+      element: React.createElement(FocusFlow, null)
+    }),
+    React.createElement(Route, {
+      path: '/digital-sunset',
+      element: React.createElement(DigitalSunsetScheduler, null)
+    }),
+    React.createElement(Route, {
+      path: '/export-report',
+      element: React.createElement(ExportWellnessReport, null)
+    }),
+    React.createElement(Route, {
+      path: '*',
+      element: React.createElement(LandingPage, null)
+    })
   );
 };
 
