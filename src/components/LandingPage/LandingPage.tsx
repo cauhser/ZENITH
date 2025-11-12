@@ -76,7 +76,6 @@ const LandingPage: React.FC = () => {
 
   return (
     <div className="landing-page">
-      {}
       <section className="hero">
         <div className="hero-content">
           <h1 className="hero-title">Enhance Your Digital Wellbeing</h1>
@@ -125,7 +124,7 @@ const LandingPage: React.FC = () => {
         </div>
       </section>
 
-      {}
+      {/* Wellness Calculator */}
       <section className="wellness-calculator">
         <div className="section-header">
           <h2 className="section-title">Your Digital Wellness Score</h2>
@@ -187,7 +186,7 @@ const LandingPage: React.FC = () => {
               <div className="score-label">Your Wellness Score</div>
             </div>
             <div className="score-tip">
-              <p>{getPersonalizedTip(wellnessScore)}</p>
+              <p>{wellnessScore ? getPersonalizedTip(wellnessScore) : ''}</p>
             </div>
             <div className="quiz-actions">
               <button 
@@ -207,7 +206,7 @@ const LandingPage: React.FC = () => {
         )}
       </section>
 
-      {}
+      {/* Features Section */}
       <section className="features">
         <div className="section-header">
           <h2 className="section-title">Powerful Wellness Insights</h2>
@@ -226,7 +225,7 @@ const LandingPage: React.FC = () => {
         </div>
       </section>
 
-      {}
+      {/* How It Works */}
       <section className="how-it-works">
         <div className="section-header">
           <h2 className="section-title">How It Works</h2>
@@ -258,7 +257,7 @@ const LandingPage: React.FC = () => {
         </div>
       </section>
 
-      {}
+      {/* Science Section */}
       <section className="science-section">
         <div className="section-header">
           <h2 className="section-title">Science Behind Zenith</h2>
@@ -294,7 +293,7 @@ const LandingPage: React.FC = () => {
         </div>
       </section>
 
-      {}
+      {/* Problem Statement */}
       <section className="problem-statement">
         <div className="section-header">
           <h2 className="section-title">The Digital Wellness Crisis</h2>
@@ -318,7 +317,7 @@ const LandingPage: React.FC = () => {
         </div>
       </section>
 
-      {}
+      {/* User Stories */}
       <section className="user-stories">
         <div className="section-header">
           <h2 className="section-title">Real User Stories</h2>
@@ -365,7 +364,7 @@ const LandingPage: React.FC = () => {
         </div>
       </section>
 
-      {}
+      {/* Extension CTA */}
       <section className="extension-cta">
         <div className="cta-content">
           <div className="cta-text">
@@ -379,7 +378,7 @@ const LandingPage: React.FC = () => {
         </div>
       </section>
 
-      {}
+      {/* Footer */}
       <footer style={{ 
         textAlign: 'center', 
         padding: '30px 20px', 
